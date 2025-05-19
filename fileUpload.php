@@ -11,11 +11,11 @@
         <input type="file" id="Data" name="Data[]" webkitdirectory>
         <input type="submit"></input>
     </form>
-
+    
     <?php
 
     $songcounter = 0;
-
+    //TEST Max
     //Maximale execution Zeit erhöhen, um timeout vorzubeugen
     ini_set('max_execution_time', 300);
 
