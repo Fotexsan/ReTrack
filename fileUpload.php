@@ -15,7 +15,6 @@
     <?php
 
     $songcounter = 0;
-    //hallo
 
     //Maximale execution Zeit erhöhen, um timeout vorzubeugen
     ini_set('max_execution_time', 300);
