@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Spotistats</title>
 </head>
 <body>
     <form action ="" method="POST" enctype="multipart/form-data">
@@ -13,11 +13,10 @@
     </form>
     
     <?php
-
     $songcounter = 0;
-    //TEST Max
+
     //Maximale execution Zeit erhöhen, um timeout vorzubeugen
-    ini_set('max_execution_time', 300);
+    ini_set('max_execution_time', 600);
 
     //Funktion um Daten aus JSON in die Datenbank zu übertragen
     function saveData($filename, $conn, $accountId){
@@ -85,7 +84,7 @@
         }
         
         //Wähle die eben erstellte Datenbank aus
-        $conn->select_db("SpotifyStats");
+        
 
         //User Tabelle erstellen (wird zur login Page bewegt)
         $sql = "CREATE TABLE IF NOT EXISTS user(
