@@ -8,7 +8,7 @@
 <body>
     <form action ="" method="POST" enctype="multipart/form-data">
         <label for="Data">Your Spotify Data</label>
-        <input type="file" id="Data" name="Data[]" webkitdirectory>
+        <input type="file" id="Data" name="Data[]" accept=".json" MULTIPLE>
         <input type="submit"></input>
     </form>
     
@@ -28,7 +28,7 @@
         foreach ($data as $entry) {
 
             //Podcasts und Songs ohne Namen werden gefiltert
-            if ($entry['master_metadata_track_name'] !== ''){
+            if (!empty($entry['master_metadata_track_name'])){
 
                 //timestamp in richtiges Format bringen
                 $timestamp = new DateTime($entry["ts"]);
@@ -84,7 +84,7 @@
         }
         
         //Wähle die eben erstellte Datenbank aus
-        
+        $conn->select_db("SpotifyStats");
 
         //User Tabelle erstellen (wird zur login Page bewegt)
         $sql = "CREATE TABLE IF NOT EXISTS user(
@@ -145,7 +145,6 @@
                 VALUES ('$username', '$email', '$password')";
 
         if ($conn->query($sql) === TRUE) {
-            echo "Neuer User erfolgreich eingefügt<br>";
             $accountId = $conn->insert_id;
         } else {
             echo "Fehler beim Einfügen des Users: " . $conn->error . "<br>";
@@ -160,15 +159,23 @@
         flush();
 
 
-        $dataCount = count($_FILES['Data']['tmp_name']) - 1;
+        $dataCount = count($_FILES['Data']['tmp_name']);
+        if ($dataCount == 1){
+            echo "1 file has to be read <br><br>";
+        }
+        else{
+            echo " $dataCount files have to be read.<br>";
+        }
 
-
-        for($i = 1; $i<=$dataCount; $i++){
+        for($i = 0; $i<$dataCount; $i++){
             $filename = $_FILES['Data']['tmp_name'][$i];
             saveData($filename, $conn, $accountId);
-            echo "$i/$dataCount done<br>";
+
+            $filename = $_FILES['Data']['name'][$i];
+            echo "$filename done<br>";
             flush();
         }
+        echo "<br>";
 
         echo "Finished! You uploaded $songcounter entries";
 
