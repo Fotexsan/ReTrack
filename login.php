@@ -1,5 +1,7 @@
 <?php
-    $exist = 1;
+    session_start();
+
+    $error = 1;
     if (isset($_POST["email"]) && isset($_POST["password"])){
         //User Eingabe speichern
         $userEmail = $_POST["email"];
@@ -36,19 +38,31 @@
         }
 
         //Checken ob User mit den Daten existiert
-        $sql = "SELECT COUNT(*) > 0
-                FROM user
-                WHERE email = '$userEmail'
-                AND password = '$userPassword';";
+        $sql = "SELECT username 
+        FROM user 
+        WHERE email = '$userEmail' 
+        AND password = '$userPassword' 
+        LIMIT 1;";
 
-        $result = ($conn->query($sql))->fetch_row();
-        $exist = $result[0];
+        $result = $conn->query($sql);
 
-        //weiterleiten wenn anmeldung erfolgreich
-        if ($exist){
-            header("Location: https://google.com"); //soll auf homepage verweisen
+        if ($result && $row = $result->fetch_assoc()) {
+            $userName = $row['username'];
+
+            $_SESSION['loggedin'] = true;
+            $_SESSION['username'] = $userName;
+            header("Location: homepage.php");
             die();
         }
+        else{
+            $error = 0;
+        }
+
+        //weiterleiten wenn anmeldung erfolgreich
+        //if ($exist){
+        //    header("Location: homeA.php");
+        //    die();
+        //}
     }
 ?>
 
@@ -65,17 +79,18 @@
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
         <br>
-        <label for="password">Your Spotify Data</label>
+        <label for="password">Password: </label>
         <input type="password" id="password" name="password" required>
         <br>
         <input type="submit"></input>
     </form>
     <?php
+            //var_dump($result);
             //Nachricht anzeigen falls anmeldung fehlgeschlagen ist
-            if ($exist == 0){
+            if ($error == 0){
                 echo "Email or password is wrong";
             }
         ?>
-    <p>Don't have an account? Create one</p>
+    <p>Don't have an account? <a href="createAccount.php">Create account</a></p>
 </body>
 </html>
