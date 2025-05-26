@@ -78,8 +78,11 @@
                     die();
                 }
 
+                $userId = $conn->insert_id;
+
                 $_SESSION['loggedin'] = true;
                 $_SESSION['username'] = $userName;
+                $_SESSION['id'] = $userId;
                 header("Location: homepage.php");
                 die();
             }

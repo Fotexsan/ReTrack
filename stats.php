@@ -7,11 +7,11 @@
 </head>
 <body>
     <h1>Create account</h1>
-    <form action ="<?php echo $_SERVER['PHP_SELF'];?>" method="POST">
+    <form action ="" method="POST">
         <label for="selectedQuery">Select a query:</label>
         <select name="selectedQuery" id="selectedQuery">
             <option value="placeholder">test</option>
-            <option value="SELECT SUM(ms_played), master_metadata_album_artist_name FROM songdata WHERE accountId =18 GROUP BY master_metadata_album_artist_name ORDER BY `SUM(ms_played)` DESC">
+            <option value="SELECT SUM(ms_played), master_metadata_album_artist_name FROM songdata WHERE accountId =1 GROUP BY master_metadata_album_artist_name ORDER BY `SUM(ms_played)` DESC">
                 Welche Künstler habe ich am längsten gehört?
             </option>
         </select>

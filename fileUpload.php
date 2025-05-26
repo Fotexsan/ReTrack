@@ -125,17 +125,17 @@
          echo "Fehler beim Erstellen der Tabelle". $conn->error . "<br>";
         }
 
-        $sql = "ALTER TABLE user AUTO_INCREMENT = 1";
-        if($conn->query($sql) === TRUE){
-        } else{
-         echo "Fehler beim Erstellen der zurücksetzten der ID". $conn->error . "<br>";
-        }
+        //$sql = "ALTER TABLE user AUTO_INCREMENT = 1";
+        //if($conn->query($sql) === TRUE){
+        //} else{
+        // echo "Fehler beim zurücksetzten der ID". $conn->error . "<br>";
+        //}
 
-        $sql = "ALTER TABLE songdata AUTO_INCREMENT = 1";
-        if($conn->query($sql) === TRUE){
-        } else{
-         echo "Fehler beim Erstellen der zurücksetzten der ID". $conn->error . "<br>";
-        }
+        //$sql = "ALTER TABLE songdata AUTO_INCREMENT = 1";
+        //if($conn->query($sql) === TRUE){
+        //} else{
+        // echo "Fehler beim Erstellen der zurücksetzten der ID". $conn->error . "<br>";
+        //}
 
         $username = 'maxmustermann';
         $email = 'max@example.com';
@@ -178,7 +178,7 @@
         echo "<br>";
 
         echo "Finished! You uploaded $songcounter entries <br>";
-        echo 'Click <a href="http://localhost/retrack/stats.php">here</a> to start getting your stats'; 
+        echo 'Click <a href="stats.php">here</a> to start getting your stats'; 
 
 
         //saveData($filename, $conn, 2); //accountId muss noch von irgendwo kommen

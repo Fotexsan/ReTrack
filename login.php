@@ -38,7 +38,7 @@
         }
 
         //Checken ob User mit den Daten existiert
-        $sql = "SELECT username 
+        $sql = "SELECT id, username 
         FROM user 
         WHERE email = '$userEmail' 
         AND password = '$userPassword' 
@@ -48,21 +48,17 @@
 
         if ($result && $row = $result->fetch_assoc()) {
             $userName = $row['username'];
+            $userId = $row['id'];
 
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $userName;
+            $_SESSION['id'] = $userId;
             header("Location: homepage.php");
             die();
         }
         else{
             $error = 0;
         }
-
-        //weiterleiten wenn anmeldung erfolgreich
-        //if ($exist){
-        //    header("Location: homeA.php");
-        //    die();
-        //}
     }
 ?>
 

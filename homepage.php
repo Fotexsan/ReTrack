@@ -2,6 +2,7 @@
 session_start();
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     echo "Welcome " . $_SESSION['username'] . "!";
+    echo $_SESSION['id'];
 } else {
     echo "Please log in first to see this page.";
 }
@@ -17,6 +18,6 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 </head>
 <body>
     <h1>Homepage</h1>
-    <h2>Click <a href="http://localhost/retrack/fileUpload.php">here</a> to get to the file upload.</h2> 
+    <h2>Click <a href="fileUpload.php">here</a> to get to the file upload.</h2> 
 </body>
 </html>
