@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Create account</h1>
-    <form action ="<?php echo $_SERVER['PHP_SELF'];?>" method="POST">
+    <form action ="" method="POST">
         <label for="selectedQuery">Select a query:</label>
         <select name="selectedQuery" id="selectedQuery">
             <option value="placeholder" selected>Choose a query!</option>
