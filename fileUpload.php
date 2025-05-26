@@ -177,7 +177,8 @@
         }
         echo "<br>";
 
-        echo "Finished! You uploaded $songcounter entries";
+        echo "Finished! You uploaded $songcounter entries <br>";
+        echo 'Click <a href="http://localhost/retrack/stats.php">here</a> to start getting your stats'; 
 
 
         //saveData($filename, $conn, 2); //accountId muss noch von irgendwo kommen
