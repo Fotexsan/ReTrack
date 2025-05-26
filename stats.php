@@ -10,9 +10,14 @@
     <form action ="<?php echo $_SERVER['PHP_SELF'];?>" method="POST">
         <label for="selectedQuery">Select a query:</label>
         <select name="selectedQuery" id="selectedQuery">
-            <option value="placeholder">test</option>
-            <option value="SELECT SUM(ms_played), master_metadata_album_artist_name FROM songdata WHERE accountId =18 GROUP BY master_metadata_album_artist_name ORDER BY `SUM(ms_played)` DESC">
-                Welche Künstler habe ich am längsten gehört?
+            <option value="placeholder" selected>Choose a query!</option>
+            <!--
+            <?php foreach($countries as $country){ ?>
+                <option value="<?php echo $country['country_code'];?>"><?php echo $country['country_name'];?></option>
+             <?php } ?>
+            -->
+            <option value="SELECT SUM(ms_played), master_metadata_album_artist_name FROM songdata WHERE accountId =19 GROUP BY master_metadata_album_artist_name ORDER BY `SUM(ms_played)` DESC">
+                How much time did I spend listening to my top artists?
             </option>
         </select>
         <input type="submit"></input>
@@ -54,7 +59,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['selectedQuery'] != "placehol
         echo "0 results";
     }
     $conn->close();
-} else {
-    echo "Select a query.";
-}
+} 
 ?>
