@@ -13,6 +13,13 @@
     </form>
     
     <?php
+    session_start();
+    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+        $accountId = $_SESSION['id'];
+    } else {
+        echo "Please log in first to see this page.";
+    }
+
     $songcounter = 0;
 
     //Maximale execution Zeit erhöhen, um timeout vorzubeugen
@@ -137,19 +144,7 @@
         // echo "Fehler beim Erstellen der zurücksetzten der ID". $conn->error . "<br>";
         //}
 
-        $username = 'maxmustermann';
-        $email = 'max@example.com';
-        $password = 'geheim';
-
-        $sql = "INSERT INTO user (username, email, password)
-                VALUES ('$username', '$email', '$password')";
-
-        if ($conn->query($sql) === TRUE) {
-            $accountId = $conn->insert_id;
-        } else {
-            echo "Fehler beim Einfügen des Users: " . $conn->error . "<br>";
-        }
-
+       
         while (ob_get_level()) {
             ob_end_flush();
         }
