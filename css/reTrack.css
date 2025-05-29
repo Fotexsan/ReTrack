@@ -1,0 +1,143 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #0f0f0f;
+    color: #e3e3e3;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1e1e1e;
+    padding: 20px 30px;
+    box-shadow: 0 6px 20px #000000c0;
+    border-radius: 0 0 16px 16px;
+    position: sticky;
+    font-size: 18px;
+}
+
+.nav-left,
+.nav-right {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-link {
+    color: #e3e3e3;
+    text-decoration: none;
+    padding: 12px 18px;
+    border-radius: 10px;
+}
+
+.nav-link:hover {
+    background-color: #0f0f0f;
+    text-decoration: none;
+    color: #1DB954;
+}
+
+.nav-link.active {
+    background-color: #1DB954;
+    color: #0f0f0f;
+}
+
+.content-box {
+    background-color: #1e1e1e;
+    max-width: 750px;
+    margin: 60px auto 80px;
+    padding: 50px 55px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px #000000c0;
+    line-height: 1.5;
+}
+
+h1 {
+    color: #1DB954;
+    margin-bottom: 30px;
+    font-weight: bold;
+    font-size: 45px;
+}
+
+h2 {
+    margin-top: 50px;
+    color: #1DB954;
+    font-size: 30px;
+    border-left: 4px solid #e3e3e3;
+    padding-left: 12px;
+}
+
+/* Text & Listen */
+p, ol {
+    font-size: 18px;
+    color: #e3e3e3;
+    margin-top: 16px;
+}
+
+/* Links */
+a {
+    color: #1DB954;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Form */
+
+.form {
+    background-color: #1e1e1e;
+    max-width: 500px;
+    margin: 60px auto 80px;
+    padding: 50px 55px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px #000000c0;
+    line-height: 1.5;
+}
+
+
+label {
+    display: block;
+    margin: 15px 0 5px;
+    text-align: left;
+}
+
+input{
+    height: 40px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: #2a2a2a;
+    color: #e3e3e3;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+input:focus{
+    outline: 2px solid #1DB954;
+}
+
+.SubmitButton {
+    width: 20%;
+    margin-top: 20px;
+    background-color: #1DB954;
+    color: #1e1e1e;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.SubmitButton:hover {
+    background-color: #1ed760;
+}
+
+.error {
+    margin-top: 15px;
+    color: #ff4d4d;
+    font-size: 15px;
+}

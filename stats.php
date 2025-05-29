@@ -9,6 +9,7 @@ $queries = getQueries();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotistats</title>
+    <link rel="stylesheet" href="css/reTrack.css"> 
 </head>
 <body>
     <h1>:3</h1>
@@ -16,11 +17,14 @@ $queries = getQueries();
         <label for="selectedQuery">Select a query:</label>
         <select name="selectedQuery" id="selectedQuery">
             <option value="-1" selected>Choose a query!</option>
-            <?php $i=0; foreach($queries as $query){
-                $name = $queries[$i][1];
-                echo "<option value='$i'>$name</option>";
-                $i++;
-            } ?>
+            <?php 
+                $i=0; 
+                foreach($queries as $query){
+                    $name = $queries[$i][1];
+                    echo "<option value='$i'>$name</option>";
+                    $i++;
+                }
+            ?>
         </select>
         <input type="submit"></input>
     </form>

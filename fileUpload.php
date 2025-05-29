@@ -1,11 +1,23 @@
+<?php
+    session_start();
+    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+        $accountId = $_SESSION['id'];
+    } else {
+        echo "Please log in first to see this page.";
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotistats</title>
+    <link rel="stylesheet" href="css/reTrack.css"> 
 </head>
 <body>
+
+
     <form action ="" method="POST" enctype="multipart/form-data">
         <label for="Data">Your Spotify Data</label>
         <input type="file" id="Data" name="Data[]" accept=".json" MULTIPLE>
@@ -13,12 +25,6 @@
     </form>
     
     <?php
-    session_start();
-    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-        $accountId = $_SESSION['id'];
-    } else {
-        echo "Please log in first to see this page.";
-    }
 
     $songcounter = 0;
 

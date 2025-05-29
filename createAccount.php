@@ -5,7 +5,6 @@
     
     if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["rePassword"]) && isset($_POST["userName"])){
         //User Eingabe speichern
-
         $userName = $_POST["userName"];
         $userEmail = $_POST["email"];
         $userPassword = $_POST["password"];
@@ -53,23 +52,8 @@
                 $error = 2;
             }
 
-            //Checken ob Username schon in Gebrauch ist
-            $sql = "SELECT COUNT(*) > 0
-                    FROM user
-                    WHERE username = '$userName';";
-
-            $result = ($conn->query($sql))->fetch_row();
-
-            //weiterleiten wenn anmeldung erfolgreich
-            if ($result[0]>0 && $error == 2){
-                $error = 4;
-            }
-            elseif ($result[0]>0){
-                $error = 3;
-            }
-
             if ($error == 0){
-
+                //Account erstellen
                 $sql= "INSERT INTO user (username, email, password) 
                 VALUES ('$userName', '$userEmail', '$userPassword')";
 
@@ -77,12 +61,14 @@
                     echo "Fehler beim Daten übernehmen" . $conn->error . "<br>";
                     die();
                 }
-
+                
                 $userId = $conn->insert_id;
 
+                //Angemeldet zur homepage weiterleiten
                 $_SESSION['loggedin'] = true;
                 $_SESSION['username'] = $userName;
                 $_SESSION['id'] = $userId;
+
                 header("Location: homepage.php");
                 die();
             }
@@ -101,39 +87,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotistats</title>
+    <link rel="stylesheet" href="./css/reTrack.css">
 </head>
+
 <body>
-    <h1>Create account</h1>
-    <form action ="" method="POST">
-        <label for="userName">Username:</label>
-        <input type="text" id="userName" name="userName" required>
-        <br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <label for="rePassword">repeat Password:</label>
-        <input type="password" id="rePassword" name="rePassword" required>
-        <input type="submit"></input>
-    </form>
-    <?php
-            //Nachricht anzeigen falls anmeldung fehlgeschlagen ist
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="homepage.php" class="nav-link">Home</a>
+            <a href="stats.php" class="nav-link">Stats</a>
+            <a href="fileUpload.php" class="nav-link">File Upload</a>
+            <a href="explanation.php" class="nav-link">Help</a>
+        </div>
+        <div class="nav-right">
+            <a href="account.php" class="nav-link active">Account</a>
+        </div>
+    </nav>
+
+
+
+    <div class="form">
+        <h1>Create Account</h1>
+        <form action="" method="POST">
+            <label for="userName">Username:</label>
+            <input type="text" id="userName" name="userName" placeholder="Username" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+
+            <label for="rePassword">Repeat password:</label>
+            <input type="password" id="rePassword" name="rePassword" placeholder="Repeat password" required>
+
+            <input class="SubmitButton" type="submit" value="Create">
+        </form>
+
+        <?php
             switch ($error){
                 case 1:
-                    echo "Password and repeated password are different";
+                    echo "<p class='error'>Password and repeated password are different</p>";
                     break;
                 case 2:
-                    echo "Email is already in use";
-                    break;
-                case 3:
-                    echo "Username is already in use";
-                    break;
-                case 4:
-                    echo "Email and username are already in use";
+                    echo "<p class='error'>Email is already in use</p>";
             }
         ?>
-    <p>Already have an account? <a href="login.php">Login</a></p>
+
+        <p>Already have an account? <a href="login.php">Login</a></p>
+    </div>
 </body>
 </html>
