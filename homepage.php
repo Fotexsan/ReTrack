@@ -4,8 +4,8 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     $username = $_SESSION['username'];
     $userid = $_SESSION['id'];
 }
-
 ?>
+
 <!DOCTYPE html> 
 <html lang="en"> 
 <head>     
