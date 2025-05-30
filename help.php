@@ -42,11 +42,10 @@
         </div>
     </nav>
 
-
     <div class="content">
-
         <h1>Help</h1>
         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reprehenderit consequuntur laboriosam quas, exercitationem consequatur debitis nostrum nemo aperiam laborum dolorum dignissimos aspernatur, sequi numquam nihil in, delectus officia illo obcaecati?</p>
     </div>
+
 </body>
 </html>

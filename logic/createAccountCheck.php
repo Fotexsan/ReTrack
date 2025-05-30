@@ -1,49 +1,29 @@
 <?php
 session_start();
+include "dbConnection.php";
 
-if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["rePassword"]) && isset($_POST["userName"])){
+if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["rePassword"]) && isset($_POST["username"])){
     //User Eingabe speichern
-    $username = $_POST["userName"];
+    $username = $_POST["username"];
     $userEmail = $_POST["email"];
     $userPassword = $_POST["password"];
     $userRePassword = $_POST["rePassword"];
 
     if ($userPassword == $userRePassword){
-        $servername = "localhost";
-        $adminname = "root";
-        $passwort = "";
         //Verbindung zum DB-Server herstellen
-        $conn = new mysqli($servername, $adminname, $passwort);
-        //Datenbank erstellen
-        $sql = "CREATE DATABASE IF NOT EXISTS SpotifyStats";
-        if ($conn->query($sql) === FALSE){
-            echo "Fehler beim Erstellen der Datenbank". $conn->error;
-            die();
-        }
-
-        $conn->select_db("SpotifyStats");
-        //User Tabelle erstellen
-        $sql = "CREATE TABLE IF NOT EXISTS user(
-        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(30),
-        email VARCHAR(50),
-        password VARCHAR(50),
-        registrierungsdatum TIMESTAMP
-        )";
-
-        if($conn->query($sql) === FALSE){
-            echo "Fehler beim Erstellen der Tabelle". $conn->error;
-            die();
-        }
-
+        $conn = connect();
+        
         //Checken ob Email schon in Gebrauch ist
         $sql = "SELECT COUNT(*) > 0
                 FROM user
                 WHERE email = '$userEmail';";
+
         $result = ($conn->query($sql))->fetch_row();
+
         if ($result[0]>0){
             $_SESSION["error"] = 2;
         }
+
         if (!isset($_SESSION["error"])){
             //Account erstellen
             $sql= "INSERT INTO user (username, email, password) 
@@ -54,13 +34,18 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["rePassw
             }
             
             $userId = $conn->insert_id;
+
+            $conn->close();
+
             //Angemeldet zur homepage weiterleiten
             $_SESSION["loggedin"] = true;
             $_SESSION["username"] = $username;
             $_SESSION["id"] = $userId;
+
             header("Location: ../homepage.php");
             die();
         }
+        $conn->close();
     }
     else{
         $_SESSION["error"] = 1;

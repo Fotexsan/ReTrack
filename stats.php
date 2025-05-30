@@ -1,5 +1,7 @@
 <?php
-require "queries.php";
+include "logic/queries.php";
+include "logic/dbConnection.php";
+
 $queries = getQueries();
 -
 session_start();
@@ -10,7 +12,6 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     $_SESSION['info'] = "Stats";
     header("Location: login.php");
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -67,21 +68,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 </html>
 
 <?php
-
-$servername = "localhost";
-$adminName = "root";
-$passwort = "";
-
-$conn = new mysqli($servername, $adminName, $passwort);
-
- //Verbindung überprüfen
-if ($conn->connect_error){
-die("Verbindung fehlgeschlagen: ".$conn->connect_error); //Exit + Fehlermeldung
-}
-
-//Wähle die eben erstellte Datenbank aus
-$conn->select_db("SpotifyStats");
-
+$conn = connect();
 
 //gette den value aus dem Drop down menü auf $selectedQuery
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['selectedQuery'] != "-1") {

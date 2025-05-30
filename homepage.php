@@ -14,7 +14,8 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     <title>ReTrack</title>     
     <link rel="stylesheet" href="css/reTrack.css"> 
 </head> 
-<body>     
+<body>    
+     
     <nav class="navbar">
         <div class="nav-left">
             <a href="homepage.php" class="nav-link active">Home</a>

@@ -6,6 +6,10 @@ body {
     color: #e3e3e3;
 }
 
+button, input, select {
+    font-family: inherit;
+}
+
 strong{
     color: #1DB954;
 }
@@ -177,6 +181,7 @@ input{
     color: #e3e3e3;
     font-size: 15px;
     box-sizing: border-box;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 input:focus{
@@ -219,7 +224,7 @@ input{
 }
 
 
-/* Upload-spezifischer Stil */
+/* File Upload */
 input[type="file"] {
     margin-top: 5px;
     height: 65px;

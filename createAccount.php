@@ -32,8 +32,8 @@
     <div class="form-box">
         <h1 class="form-h1">Create Account</h1>
         <form action="logic/createAccountCheck.php" method="POST">
-            <label for="userName">Username:</label>
-            <input type="text" id="userName" name="userName" placeholder="Username" required>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Username" required>
 
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" placeholder="example@gmail.com" required>

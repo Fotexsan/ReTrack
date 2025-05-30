@@ -1,6 +1,6 @@
 <?php
     session_start();
-    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+    if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true) {
         header("Location: fileUpload.php"); //Fehler Nachricht hinzufügen
     }
 ?>
@@ -23,7 +23,7 @@
             <a href="help.php" class="nav-link">Help</a>
         </div>
         <div class="nav-right">
-            <a href='login.php' class='nav-link active'>Log in</a>
+            <a href="login.php" class="nav-link active">Log in</a>
         </div>
     </nav>
 
@@ -40,18 +40,18 @@
         </form>
         <?php
             //Nachricht anzeigen falls anmeldung fehlgeschlagen ist
-            if (isset($_SESSION['error'])){
-                echo '<p class="error">Email or password is wrong</p>';
-                unset($_SESSION['error']);
+            if (isset($_SESSION["error"])){
+                echo "<p class='error'>Email or password is wrong</p>";
+                unset($_SESSION["error"]);
             }
-            elseif(isset($_SESSION['info'])){
-                if ($_SESSION['info'] == "Upload"){
-                    echo '<p class="error">You need to login before you can upload files</p>';
+            elseif(isset($_SESSION["info"])){
+                if ($_SESSION["info"] == "Upload"){
+                    echo "<p class='error'>You need to login before you can upload files</p>";
                 }
-                elseif ($_SESSION['info'] == "Stats"){
-                    echo '<p class="error">You need to login before you can see your stats</p>';
+                elseif ($_SESSION["info"] == "Stats"){
+                    echo "<p class='error'>You need to login before you can see your stats</p>";
                 }
-                unset($_SESSION['info']);
+                unset($_SESSION["info"]);
             }
         ?>
         <p>Don't have an account? <a href="createAccount.php">Create account</a></p>

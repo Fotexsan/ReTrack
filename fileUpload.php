@@ -9,123 +9,17 @@
     }
 
     while (ob_get_level()) {
-            ob_end_flush();
-        }
+        ob_end_flush();
+    }
+    ob_implicit_flush(true);
 
-        ob_implicit_flush(true);
-
-    $songcounter = 0;
+    include "logic/dbConnection.php";
+    include "logic/saveSongData.php";
 
     //Maximale execution Zeit erhöhen, um timeout vorzubeugen
     ini_set('max_execution_time', 600);
 
-    //Funktion um Daten aus JSON in die Datenbank zu übertragen
-    function saveData($filename, $conn, $accountId){
-        // Datei einlesen
-        $json = file_get_contents($filename);
-        $data = json_decode($json, true);
-
-        //alle Einträge der JSON durchgehen
-        foreach ($data as $entry) {
-
-            //Podcasts und Songs ohne Namen werden gefiltert
-            if (!empty($entry['master_metadata_track_name'])){
-
-                //timestamp in richtiges Format bringen
-                $timestamp = new DateTime($entry["ts"]);
-                $ts = $timestamp->format('Y-m-d H:i:s');
-
-                //restliche Daten werden aus der JSON extrahiert
-                $platform = $conn->real_escape_string($entry["platform"]);
-                $ms = $entry["ms_played"];
-                $country = $entry["conn_country"];
-                $song = $conn->real_escape_string($entry["master_metadata_track_name"]);
-                $artist = $conn->real_escape_string($entry["master_metadata_album_artist_name"]);
-                $album = $conn->real_escape_string($entry["master_metadata_album_album_name"]);
-                $uri = $entry["spotify_track_uri"];
-                $start = $entry["reason_start"];
-                $end = $entry["reason_end"];
-                $shuffle = (int)$entry["shuffle"];
-                $offline = (int)$entry["offline"];
-                $incognito = (int)$entry["incognito_mode"];
-                
-                //Daten in Datenbank eintragen
-                $sql = "INSERT INTO songData (
-                accountId, ts, platform, ms_played, conn_country, master_metadata_track_name, master_metadata_album_artist_name,
-                master_metadata_album_album_name, spotify_track_uri, reason_start, reason_end, shuffle, offline, incognito_mode) 
-                VALUES ('$accountId', '$ts', '$platform', $ms, '$country', '$song', '$artist', '$album', '$uri', '$start', '$end', $shuffle, $offline, $incognito)";
-
-                if (!$conn->query($sql)) {
-                    echo "Fehler bei Song: " . $conn->error . "<br>";
-                }
-
-                $GLOBALS["songcounter"]++;
-            }
-        }
-    }
-
-
-
-    if (isset($_FILES['Data'])){
-        $servername = "localhost";
-        $adminName = "root";
-        $passwort = "";
-
-        //Verbindung zum DB-Server herstellen
-        $conn = new mysqli($servername, $adminName, $passwort);
-        
-        //Verbindung überprüfen
-        if ($conn->connect_error){
-        die("Verbindung fehlgeschlagen: ".$conn->connect_error); //Exit + Fehlermeldung
-        }
-        //Datenbank erstellen (wird zur login Page bewegt)
-        $sql = "CREATE DATABASE IF NOT EXISTS SpotifyStats";
-        if ($conn->query($sql) === FALSE){
-        echo "Fehler beim Erstellen der Datenbank". $conn->error . "<br>";
-        }
-        
-        //Wähle die eben erstellte Datenbank aus
-        $conn->select_db("SpotifyStats");
-
-        //User Tabelle erstellen (wird zur login Page bewegt)
-        $sql = "CREATE TABLE IF NOT EXISTS user(
-        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(30),
-        email VARCHAR(50),
-        password VARCHAR(50),
-        registrierungsdatum TIMESTAMP
-        )";
-
-        if($conn->query($sql) === TRUE){
-        } else{
-         echo "Fehler beim Erstellen der Tabelle". $conn->error . "<br>";
-        }
-
-        //songData Tabelle erstellen
-        $sql = "CREATE TABLE IF NOT EXISTS songData(
-        songId INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-        accountId INT UNSIGNED,
-        ts TIMESTAMP,
-        platform VARCHAR(200),
-        ms_played INT,
-        conn_country VARCHAR(2),
-        master_metadata_track_name VARCHAR(200),
-        master_metadata_album_artist_name VARCHAR(200),
-        master_metadata_album_album_name VARCHAR(200),
-        spotify_track_uri VARCHAR(36),
-        reason_start VARCHAR(9),
-        reason_end VARCHAR(28),
-        shuffle BOOLEAN,
-        offline BOOLEAN,
-        incognito_mode BOOLEAN,
-        FOREIGN KEY (accountId) REFERENCES user(id) ON DELETE CASCADE
-        )";
-
-        if($conn->query($sql) === TRUE){
-        } else{
-         echo "Fehler beim Erstellen der Tabelle". $conn->error . "<br>";
-        }
-    }
+    $songcounter = 0;
 ?>
 
 <!DOCTYPE html>
@@ -163,46 +57,49 @@
     </nav>
 
 
-<div class="form-box">
-    <h1>Upload your Spotify Data</h1>
-    <p class="not-centered">Select the .json files from your downloaded Spotify data.<br> If you are not sure what to upload click <a href="help.php">here</a> for help.</p>
-
-    <form action="" method="POST" enctype="multipart/form-data">
-        <label for="Data">Choose JSON files</label>
-        <input type="file" id="Data" name="Data[]" accept=".json" multiple required>
-
-        <input class="form-submit" type="submit" value="Upload">
-    </form>
-    <p>
-    <?php
-        if (isset($_FILES['Data'])){
-            $dataCount = count($_FILES['Data']['tmp_name']);
-            if ($dataCount == 1){
-                echo "1 file has to be read... <br><br>";
+    <div class="form-box">
+        <h1>Upload your Spotify Data</h1>
+        <p class="not-centered">Select the .json files from your downloaded Spotify data.<br> If you are not sure what to upload click <a href="help.php">here</a> for help.</p>
+                
+        <form action="" method="POST" enctype="multipart/form-data">
+            <label for="Data">Choose JSON files</label>
+            <input type="file" id="Data" name="Data[]" accept=".json" multiple required>
+                
+            <input class="form-submit" type="submit" value="Upload">
+        </form>
+        <p>
+        <?php
+            if (isset($_FILES['Data'])){
+                $dataCount = count($_FILES['Data']['tmp_name']);
+                if ($dataCount == 1){
+                    echo "1 file has to be read... <br><br>";
+                }
+                else{
+                    echo " $dataCount files have to be read...<br><br>";
+                }
+            
+                for($i = 0; $i<$dataCount; $i++){
+                
+                    $conn = connect();
+                
+                    $filename = $_FILES['Data']['tmp_name'][$i];
+                    saveSongData($filename, $conn, $accountId);
+                
+                    $filename = $_FILES['Data']['name'][$i];
+                    echo "$filename done<br>";
+                    flush();
+                }
+                $conn->close();
+            
+                echo "<br>";
+            
+                echo "Finished! You uploaded <strong> $songcounter </strong> entries <br>";
+                echo 'Click <a href="stats.php">here</a> to start getting your stats'; 
+            
             }
-            else{
-                echo " $dataCount files have to be read...<br><br>";
-            }
-
-            for($i = 0; $i<$dataCount; $i++){
-                $filename = $_FILES['Data']['tmp_name'][$i];
-                saveData($filename, $conn, $accountId);
-
-                $filename = $_FILES['Data']['name'][$i];
-                echo "$filename done<br>";
-                flush();
-            }
-            echo "<br>";
-
-            echo "Finished! You uploaded <strong> $songcounter </strong> entries <br>";
-            echo 'Click <a href="stats.php">here</a> to start getting your stats'; 
-
-
-            $conn->close();
-        }
-    ?>
-    </p>
-</div>
+        ?>
+        </p>
+    </div>
     
 
     <!--
