@@ -1,6 +1,16 @@
 <?php
 require "queries.php";
 $queries = getQueries();
+-
+session_start();
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+    $accountId = $_SESSION['id'];
+    $username = $_SESSION['username'];
+} else {
+    $_SESSION['info'] = "Stats";
+    header("Location: login.php");
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -12,6 +22,31 @@ $queries = getQueries();
     <link rel="stylesheet" href="css/reTrack.css"> 
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="homepage.php" class="nav-link">Home</a>
+            <a href="stats.php" class="nav-link active">Stats</a>
+            <a href="fileUpload.php" class="nav-link">File Upload</a>
+            <a href="help.php" class="nav-link">Help</a>
+        </div>
+        <div class="nav-right">
+            <?php
+                if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
+                    echo
+                    "<div class='dropdown'>
+                        <button class='dropbtn'>$username</button>
+                        <div class='dropdown-content'>
+                            <a href='logic/logout.php' class='logout'>Log out</a>
+                        </div>
+                    </div>";
+                }
+                else{
+                    echo "<a href='login.php' class='nav-link'>Log in</a>";
+                }
+            ?>
+        </div>
+    </nav>
+
     <h1>:3</h1>
     <form action ="" method="POST">
         <label for="selectedQuery">Select a query:</label>
@@ -32,13 +67,12 @@ $queries = getQueries();
 </html>
 
 <?php
-session_start();
 
 $servername = "localhost";
-$username = "root";
+$adminName = "root";
 $passwort = "";
 
-$conn = new mysqli($servername, $username, $passwort);
+$conn = new mysqli($servername, $adminName, $passwort);
 
  //Verbindung überprüfen
 if ($conn->connect_error){

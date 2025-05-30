@@ -96,17 +96,30 @@
             <a href="homepage.php" class="nav-link">Home</a>
             <a href="stats.php" class="nav-link">Stats</a>
             <a href="fileUpload.php" class="nav-link">File Upload</a>
-            <a href="explanation.php" class="nav-link">Help</a>
+            <a href="help.php" class="nav-link">Help</a>
         </div>
         <div class="nav-right">
-            <a href="account.php" class="nav-link active">Account</a>
+            <?php
+                if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
+                    echo
+                    "<div class='dropdown'>
+                        <button class='dropbtn'>$username</button>
+                        <div class='dropdown-content'>
+                            <a href='logic/logout.php' class='logout'>Log out</a>
+                        </div>
+                    </div>";
+                }
+                else{
+                    echo "<a href='login.php' class='nav-link active'>Log in</a>";
+                }
+            ?>
         </div>
     </nav>
 
 
 
-    <div class="form">
-        <h1>Create Account</h1>
+    <div class="form-box">
+        <h1 class="form-h1">Create Account</h1>
         <form action="" method="POST">
             <label for="userName">Username:</label>
             <input type="text" id="userName" name="userName" placeholder="Username" required>
@@ -120,7 +133,7 @@
             <label for="rePassword">Repeat password:</label>
             <input type="password" id="rePassword" name="rePassword" placeholder="Repeat password" required>
 
-            <input class="SubmitButton" type="submit" value="Create">
+            <input class="form-submit" type="submit" value="Create">
         </form>
 
         <?php

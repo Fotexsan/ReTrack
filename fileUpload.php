@@ -2,29 +2,17 @@
     session_start();
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
         $accountId = $_SESSION['id'];
+        $username = $_SESSION['username'];
     } else {
-        echo "Please log in first to see this page.";
+        $_SESSION['info'] = "Upload";
+        header("Location: login.php");
     }
-?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotistats</title>
-    <link rel="stylesheet" href="css/reTrack.css"> 
-</head>
-<body>
+    while (ob_get_level()) {
+            ob_end_flush();
+        }
 
-
-    <form action ="" method="POST" enctype="multipart/form-data">
-        <label for="Data">Your Spotify Data</label>
-        <input type="file" id="Data" name="Data[]" accept=".json" MULTIPLE>
-        <input type="submit"></input>
-    </form>
-    
-    <?php
+        ob_implicit_flush(true);
 
     $songcounter = 0;
 
@@ -45,7 +33,7 @@
 
                 //timestamp in richtiges Format bringen
                 $timestamp = new DateTime($entry["ts"]);
-                $ts = $timestamp->format('Y-m-d H:i:s');    
+                $ts = $timestamp->format('Y-m-d H:i:s');
 
                 //restliche Daten werden aus der JSON extrahiert
                 $platform = $conn->real_escape_string($entry["platform"]);
@@ -80,11 +68,11 @@
 
     if (isset($_FILES['Data'])){
         $servername = "localhost";
-        $username = "root";
+        $adminName = "root";
         $passwort = "";
 
         //Verbindung zum DB-Server herstellen
-        $conn = new mysqli($servername, $username, $passwort);
+        $conn = new mysqli($servername, $adminName, $passwort);
         
         //Verbindung überprüfen
         if ($conn->connect_error){
@@ -137,60 +125,89 @@
         } else{
          echo "Fehler beim Erstellen der Tabelle". $conn->error . "<br>";
         }
-
-        //$sql = "ALTER TABLE user AUTO_INCREMENT = 1";
-        //if($conn->query($sql) === TRUE){
-        //} else{
-        // echo "Fehler beim zurücksetzten der ID". $conn->error . "<br>";
-        //}
-
-        //$sql = "ALTER TABLE songdata AUTO_INCREMENT = 1";
-        //if($conn->query($sql) === TRUE){
-        //} else{
-        // echo "Fehler beim Erstellen der zurücksetzten der ID". $conn->error . "<br>";
-        //}
-
-       
-        while (ob_get_level()) {
-            ob_end_flush();
-        }
-
-        ob_implicit_flush(true);
-
-        flush();
-
-
-        $dataCount = count($_FILES['Data']['tmp_name']);
-        if ($dataCount == 1){
-            echo "1 file has to be read <br><br>";
-        }
-        else{
-            echo " $dataCount files have to be read.<br>";
-        }
-
-        for($i = 0; $i<$dataCount; $i++){
-            $filename = $_FILES['Data']['tmp_name'][$i];
-            saveData($filename, $conn, $accountId);
-
-            $filename = $_FILES['Data']['name'][$i];
-            echo "$filename done<br>";
-            flush();
-        }
-        echo "<br>";
-
-        echo "Finished! You uploaded $songcounter entries <br>";
-        echo 'Click <a href="stats.php">here</a> to start getting your stats'; 
-
-
-        //saveData($filename, $conn, 2); //accountId muss noch von irgendwo kommen
-        //echo $_FILES['Data']['name'][1]; //
-        $conn->close();
     }
+?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotistats</title>
+    <link rel="stylesheet" href="css/reTrack.css"> 
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="homepage.php" class="nav-link">Home</a>
+            <a href="stats.php" class="nav-link">Stats</a>
+            <a href="fileUpload.php" class="nav-link active">File Upload</a>
+            <a href="help.php" class="nav-link">Help</a>
+        </div>
+        <div class="nav-right">
+            <?php
+                if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
+                    echo
+                    "<div class='dropdown'>
+                        <button class='dropbtn'>$username</button>
+                        <div class='dropdown-content'>
+                            <a href='logic/logout.php' class='logout'>Log out</a>
+                        </div>
+                    </div>";
+                }
+                else{
+                    echo "<a href='login.php' class='nav-link'>Log in</a>";
+                }
+            ?>
+        </div>
+    </nav>
+
+
+<div class="form-box">
+    <h1>Upload your Spotify Data</h1>
+    <p class="not-centered">Select the .json files from your downloaded Spotify data.<br> If you are not sure what to upload click <a href="help.php">here</a> for help.</p>
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        <label for="Data">Choose JSON files</label>
+        <input type="file" id="Data" name="Data[]" accept=".json" multiple required>
+
+        <input class="form-submit" type="submit" value="Upload">
+    </form>
+    <p>
+    <?php
+        if (isset($_FILES['Data'])){
+            $dataCount = count($_FILES['Data']['tmp_name']);
+            if ($dataCount == 1){
+                echo "1 file has to be read... <br><br>";
+            }
+            else{
+                echo " $dataCount files have to be read...<br><br>";
+            }
+
+            for($i = 0; $i<$dataCount; $i++){
+                $filename = $_FILES['Data']['tmp_name'][$i];
+                saveData($filename, $conn, $accountId);
+
+                $filename = $_FILES['Data']['name'][$i];
+                echo "$filename done<br>";
+                flush();
+            }
+            echo "<br>";
+
+            echo "Finished! You uploaded <strong> $songcounter </strong> entries <br>";
+            echo 'Click <a href="stats.php">here</a> to start getting your stats'; 
+
+
+            $conn->close();
+        }
+    ?>
+    </p>
+</div>
     
 
-        /*
-        array(6) 
+    <!--
+
+    array(6) 
         { 
             ["name"]=> array(14) 
             { 
@@ -295,10 +312,7 @@
                 [13]=> int(69995) 
             } 
         }
-        */
-
-
-    ?>
+    -->
 
 </body>
 </html>
