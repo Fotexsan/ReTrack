@@ -8,11 +8,25 @@ function saveSongData($filename, $conn, $accountId){
     foreach ($data as $entry) {
 
         //Podcasts und Songs ohne Namen werden gefiltert
-        if (!empty($entry['master_metadata_track_name'])){
+        if (!empty($entry['master_metadata_track_name']) && $entry["ms_played"] != 0){
 
-            //timestamp in richtiges Format bringen
-            $timestamp = new DateTime($entry["ts"]);
-            $ts = $timestamp->format('Y-m-d H:i:s');
+            //timestamp in richtiges Format bringen und offline Timestamp bevorzugen
+            if (!empty($entry["offline_timestamp"])) {
+
+                //spotify hat das Timestamp format zwischendrin geändert... (Wenn 13 Stellen in ms sonst in s)
+                if (strlen((string)$entry["offline_timestamp"]) >= 13)
+                    $oTs = $entry["offline_timestamp"]/1000;
+                else{
+                    $oTs = $entry["offline_timestamp"];
+                }
+
+                $ts = date('Y-m-d H:i:s', $oTs);
+            } 
+            else {
+                $timestamp = new DateTime($entry["ts"]);
+                $ts = $timestamp->format('Y-m-d H:i:s');
+            }
+
 
             //restliche Daten werden aus der JSON extrahiert
             $platform = $conn->real_escape_string($entry["platform"]);
@@ -29,16 +43,16 @@ function saveSongData($filename, $conn, $accountId){
             $incognito = (int)$entry["incognito_mode"];
                 
             //Daten in Datenbank eintragen
-            $sql = "INSERT INTO songData (
+            $sql = "INSERT IGNORE INTO songData (
             accountId, ts, platform, ms_played, conn_country, master_metadata_track_name, master_metadata_album_artist_name,
             master_metadata_album_album_name, spotify_track_uri, reason_start, reason_end, shuffle, offline, incognito_mode) 
             VALUES ('$accountId', '$ts', '$platform', $ms, '$country', '$song', '$artist', '$album', '$uri', '$start', '$end', $shuffle, $offline, $incognito)";
 
-            if (!$conn->query($sql)) {
-                echo "Fehler bei Song: " . $conn->error . "<br>";
+            $conn->query($sql);
+            
+            if ($conn->affected_rows > 0) {
+                $GLOBALS["songcounter"]++;
             }
-
-            $GLOBALS["songcounter"]++;
         }
     }
 }

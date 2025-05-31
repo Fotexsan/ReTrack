@@ -51,7 +51,8 @@ function connect(){
     shuffle BOOLEAN,
     offline BOOLEAN,
     incognito_mode BOOLEAN,
-    FOREIGN KEY (accountId) REFERENCES user(id) ON DELETE CASCADE
+    FOREIGN KEY (accountId) REFERENCES user(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_entry (accountId, ts, ms_played, spotify_track_uri)
     )";
 
     if($conn->query($sql) === FALSE){
