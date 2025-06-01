@@ -39,14 +39,15 @@ function saveSongData($filename, $conn, $accountId){
             $start = $entry["reason_start"];
             $end = $entry["reason_end"];
             $shuffle = (int)$entry["shuffle"];
+            $skipped = (int)$entry["skipped"];
             $offline = (int)$entry["offline"];
             $incognito = (int)$entry["incognito_mode"];
                 
             //Daten in Datenbank eintragen
             $sql = "INSERT IGNORE INTO songData (
             accountId, ts, platform, ms_played, conn_country, master_metadata_track_name, master_metadata_album_artist_name,
-            master_metadata_album_album_name, spotify_track_uri, reason_start, reason_end, shuffle, offline, incognito_mode) 
-            VALUES ('$accountId', '$ts', '$platform', $ms, '$country', '$song', '$artist', '$album', '$uri', '$start', '$end', $shuffle, $offline, $incognito)";
+            master_metadata_album_album_name, spotify_track_uri, reason_start, reason_end, shuffle, skipped, offline, incognito_mode) 
+            VALUES ('$accountId', '$ts', '$platform', $ms, '$country', '$song', '$artist', '$album', '$uri', '$start', '$end', $shuffle,  $skipped, $offline, $incognito)";
 
             $conn->query($sql);
             
