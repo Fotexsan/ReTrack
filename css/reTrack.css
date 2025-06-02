@@ -249,7 +249,186 @@ input[type="file"]::file-selector-button:hover {
 }
 
 /*Stats Filter Form */
-
-.hidden {
+.hidden{
     display: none;
+}
+
+input:disabled, select:disabled{
+    cursor: not-allowed;
+    opacity: 0.3; 
+
+}
+
+.filter-container {
+    background-color: #1e1e1e;
+    max-width: 1200px;
+    margin: 30px auto 0;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px #000000c0;
+}
+    
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-header h1 {
+    margin: 0;
+}
+
+.filter-container h3{
+    font-size: 16px;
+    margin-bottom: 3px;
+    font-weight: normal;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.filter-group {
+    background-color: #2a2a2a;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+
+.apply-btn {
+    background-color: #1DB954;
+    color: #0f0f0f;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    grid-column: 1 / -1;
+    justify-self: end;
+    margin-top: 10px;
+}
+
+.apply-btn:hover {
+    background-color: #1ed760;
+}
+
+/* Anpassungen für die Filter-Elemente */
+select, input[type="text"], input[type="number"], input[type="date"], input[type="time"] {
+    width: 100%;
+    padding: 8px 12px;
+    background-color: #3a3a3a;
+    border: 1px solid #4a4a4a;
+    border-radius: 6px;
+    color: #e3e3e3;
+    margin-bottom: 10px;
+}
+
+input[type="number"]{
+    margin-bottom: 0;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    width: auto;
+    accent-color: #1DB954;
+    margin: 0 50px 0 0;
+    vertical-align: middle;
+    transform: translateY(-1px);
+}
+
+input:focus[type="checkbox"], input:focus[type="radio"]{
+    outline: none;
+}
+
+.filter-container label {
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+
+.search-container {
+    position: relative;
+}
+.search-container input {
+    padding-right: 30px;
+    width: 100%;
+}
+/* Stil für die Vorschläge */
+datalist {
+    position: absolute;
+    background-color: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 0 0 6px 6px;
+    width: 100%;
+    z-index: 100;
+}
+datalist option:hover {
+    background-color: #3a3a3a;
+}
+
+
+/*Filter Results*/
+.results-container {
+    background-color: #1e1e1e;
+    max-width: 1200px;
+    margin: 30px auto 80px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px #000000c0;
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #e3e3e3;
+}
+
+th {
+    background-color: #1DB954;
+    color: #0f0f0f;
+    padding: 12px;
+    text-align: left;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+tr:hover {
+    background-color: #2a2a2a;
+}
+
+/*Animationen für hidden Elemente*/
+#advancedTime.animate, #sortSettings.animate{
+    max-height: 400px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+}
+
+#advancedTime.hidden, #sortSettings.hidden {
+  max-height: 0;
+  display: block
+}
+
+#minPlaysDiv.animate {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+  display: block
+}
+
+#minPlaysDiv.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
