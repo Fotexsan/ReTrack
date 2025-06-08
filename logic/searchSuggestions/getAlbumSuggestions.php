@@ -15,9 +15,9 @@ if ($accountId <= 0) {
 // Normalisiere den Suchbegriff
 $normalizedSearch = trim(preg_replace('/\s+/', ' ', strtolower($searchTerm)));
 
-$stmt = $conn->prepare("SELECT DISTINCT master_metadata_album_album_name 
-                       FROM songData 
-                       WHERE accountId = ?");
+$stmt = $conn->prepare("SELECT DISTINCT master_metadata_album_album_name, master_metadata_album_artist_name 
+                               FROM songData 
+                               WHERE accountId = ?");
 $stmt->bind_param("i", $accountId);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -25,22 +25,41 @@ $result = $stmt->get_result();
 $suggestions = [];
 while ($row = $result->fetch_assoc()) {
     $album = $row['master_metadata_album_album_name'];
-    if ($album) {
+    $artist = $row['master_metadata_album_artist_name'];
+    
+    if ($album && $artist) {
         $normalizedAlbum = trim(preg_replace('/\s+/', ' ', strtolower($album)));
-        if (strpos(str_replace(' ', '', $normalizedAlbum), str_replace(' ', '', $normalizedSearch)) !== false) {
-            $suggestions[] = $album;
+        $normalizedArtist = trim(preg_replace('/\s+/', ' ', strtolower($artist)));
+        
+        // Suche in Albumname UND Künstlername
+        if (strpos(str_replace(' ', '', $normalizedAlbum), str_replace(' ', '', $normalizedSearch)) !== false ||
+            strpos(str_replace(' ', '', $normalizedArtist), str_replace(' ', '', $normalizedSearch)) !== false) {
+            
+            $displayText = "$album - $artist";
+            $suggestions[] = [
+                'display' => $displayText,
+                'album' => $album,
+                'artist' => $artist
+            ];
         }
     }
 }
 
 usort($suggestions, function($a, $b) use ($normalizedSearch) {
-    $aPos = stripos($a, $normalizedSearch);
-    $bPos = stripos($b, $normalizedSearch);
+    $aAlbumPos = stripos($a['album'], $normalizedSearch);
+    $aArtistPos = stripos($a['artist'], $normalizedSearch);
+    $aPos = ($aAlbumPos !== false) ? $aAlbumPos : $aArtistPos;
+    
+    $bAlbumPos = stripos($b['album'], $normalizedSearch);
+    $bArtistPos = stripos($b['artist'], $normalizedSearch);
+    $bPos = ($bAlbumPos !== false) ? $bAlbumPos : $bArtistPos;
+    
     return $aPos - $bPos;
 });
 
 $suggestions = array_slice($suggestions, 0, 10);
 
-echo json_encode($suggestions);
+// Nur die Display-Texte für die Datalist zurückgeben
+echo json_encode(array_column($suggestions, 'display'));
 $conn->close();
 ?>

@@ -30,7 +30,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])){
         $_SESSION['username'] = $username;
         $_SESSION['id'] = $userId;
 
-
+        
         header("Location: ../homepage.php");
         die();
     }

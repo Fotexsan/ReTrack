@@ -9,15 +9,30 @@ function getAlbumSuggestions(searchTerm, accountId) {
 }
 
 function setupAutocomplete(inputElement, datalistElement, fetchFunction, additionalParam = null) {
-    inputElement.addEventListener('input', async function() {
+    let skipNextInput = false;
+
+    // Wenn der User per Klick etwas aus der Liste auswählt
+    inputElement.addEventListener('mousedown', () => {
+        skipNextInput = true;
+    });
+
+    inputElement.addEventListener('input', async function () {
         const searchTerm = this.value.trim();
+
+        if (skipNextInput) {
+            skipNextInput = false;
+            datalistElement.innerHTML = ''; // Liste sicherheitshalber leeren
+            return;
+        }
+
         if (searchTerm.length < 2) {
             datalistElement.innerHTML = '';
             return;
         }
+
         try {
-            const suggestions = additionalParam 
-                ? await fetchFunction(searchTerm, additionalParam) 
+            const suggestions = additionalParam
+                ? await fetchFunction(searchTerm, additionalParam)
                 : await fetchFunction(searchTerm);
             datalistElement.innerHTML = '';
             suggestions.forEach(suggestion => {
@@ -30,21 +45,19 @@ function setupAutocomplete(inputElement, datalistElement, fetchFunction, additio
         }
     });
 
-
-    // Neue Enter-Handler für Autocomplete
-    inputElement.addEventListener('keydown', function(e) {
+    inputElement.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') {
-            e.preventDefault(); // Verhindert Formular-Absendung
-            
-            // Holt den ersten Vorschlag aus der Datalist
+            e.preventDefault();
             const options = datalistElement.querySelectorAll('option');
             if (options.length > 0) {
                 this.value = options[0].value;
-                datalistElement.innerHTML = ''; // Leert die Vorschläge
+                datalistElement.innerHTML = '';
             }
         }
     });
 }
+
+
 
 // Initialisierung der Autocomplete-Funktionen
 document.addEventListener('DOMContentLoaded', function() {

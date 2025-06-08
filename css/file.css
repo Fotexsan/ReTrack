@@ -1,0 +1,25 @@
+/* File Upload */
+input[type="file"] {
+    margin-top: 5px;
+    height: 65px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+input[type="file"]::file-selector-button {
+    background-color: #1DB954;
+    height: 45px;
+    color: #1e1e1e;
+    border: none;
+    padding: 15px 15px;
+    border-radius: 10px;
+    margin-top: auto;
+    margin-right:50px;
+    font-weight: bold;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: #1ed760;
+}
+

@@ -28,12 +28,14 @@ const dateRangeStart = document.getElementById("startDate");
 const dateRangeEnd = document.getElementById("endDate");
     
 //varibalen für Season Display
-const seasonCheck = document.getElementById("season");
-const season = document.getElementById("seasonSelect");
+const monthCheck = document.getElementById("month");
+const monthDropdown = document.getElementById("monthDropdown");
+const monthButton = document.querySelector("#monthDropdown .dropdown-button");
 
 //varibalen für Weekday Display
 const weekdayCheck = document.getElementById("weekday");
-const weekday = document.getElementById("weekdaySelect");
+const weekdayDropdown = document.getElementById("weekdayDropdown");
+const weekdayButton = document.querySelector("#weekdayDropdown .dropdown-button");
 
 //varibalen für time Display
 const timeCheck = document.getElementById("time");
@@ -113,11 +115,15 @@ function updateMetricDisplay(){
 function updateTimeFilterDisplay(){
     const timeFilter = document.querySelector("input[name='timeFilter']:checked").value;
     if(timeFilter == "simple"){
+        advancedTimeDiv.classList.remove("overflow");
         advancedTimeDiv.classList.add("hidden");
         simpleTimeSelect.disabled = false;
     }
     else{
         advancedTimeDiv.classList.remove("hidden");
+        setTimeout(() => {
+            advancedTimeDiv.classList.add("overflow");
+        }, 300);
     }
 }
 
@@ -136,21 +142,24 @@ function updateDateRangeDisplay(){
     }
 }
 
-function updateSeasonDisplay(){
-    if(seasonCheck.checked){
-        season.disabled = false;
-    }
-    else{
-        season.disabled = true;   
+function updateMonthDisplay() {
+    const monthDropdown = document.getElementById("monthDropdown");
+
+    if (monthCheck.checked) {
+        monthDropdown.classList.remove("disabled");
+    } else {
+        monthDropdown.classList.remove("open"); // Schließen, wenn offen
+        monthDropdown.classList.add("disabled");
     }
 }
 
-function updateWeekdayDisplay(){
-    if(weekdayCheck.checked){
-        weekday.disabled = false;
-    }
-    else{
-        weekday.disabled = true;    
+function updateWeekdayDisplay() {
+
+    if (weekdayCheck.checked) {
+        weekdayDropdown.classList.remove("disabled");
+    } else {
+        weekdayDropdown.classList.remove("open"); // Schließen, wenn offen
+        weekdayDropdown.classList.add("disabled");
     }
 }
 
@@ -184,9 +193,37 @@ timeFilterRadio.forEach(radio =>{
 })
 
 dateRangeCheck.addEventListener("change", updateDateRangeDisplay);
-seasonCheck.addEventListener("change", updateSeasonDisplay);
+monthCheck.addEventListener("change", updateMonthDisplay);
 weekdayCheck.addEventListener("change", updateWeekdayDisplay);
 timeCheck.addEventListener("change", updateTimeDisplay);
+
+monthButton.addEventListener("click", () => {
+    const monthDropdown = document.getElementById("monthDropdown");
+    if (!monthDropdown.classList.contains("disabled")) {
+        monthDropdown.classList.toggle("open");
+    }
+});
+
+document.addEventListener("click", function (e) {
+    const monthDropdown = document.getElementById("monthDropdown");
+    if (!monthDropdown.contains(e.target)) {
+        monthDropdown.classList.remove("open");
+    }
+});
+
+weekdayButton.addEventListener("click", () => {
+    const weekdayDropdown = document.getElementById("weekdayDropdown");
+    if (!weekdayDropdown.classList.contains("disabled")) {
+        weekdayDropdown.classList.toggle("open");
+    }
+});
+
+document.addEventListener("click", function (e) {
+    const weekdayDropdown = document.getElementById("weekdayDropdown");
+    if (!weekdayDropdown.contains(e.target)) {
+        weekdayDropdown.classList.remove("open");
+    }
+});
 
 //Schließ/öffnen animationen werden erst nach vollständigem laden hinzugefügt
 document.addEventListener("DOMContentLoaded", () => {
@@ -201,6 +238,6 @@ updateSearchInput();
 updateMetricDisplay();
 updateTimeFilterDisplay(); 
 updateDateRangeDisplay();
-updateSeasonDisplay();
-updateWeekdayDisplay();
 updateTimeDisplay();
+updateMonthDisplay();
+updateWeekdayDisplay();
