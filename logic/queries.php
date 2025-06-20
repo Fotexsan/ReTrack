@@ -46,15 +46,22 @@ function query(){
     }
 
     //künstler/Album eingabe verarbeiten
+    $whereAlbum = "";
+    $whereMetricAlbum = "";
+    $whereArtist = "";
+    $whereMetricArtist = "";
+
     if (isset($_POST["album"]) && $_POST["album"] != ""){
         $album = $_POST["album"];
         //sql string zu where array hinzufügen
-        $where[] = "master_metadata_album_album_name = '$album'";
+        $whereAlbum = "AND master_metadata_album_album_name = '$album'";
+        $whereMetricAlbum = "AND s.master_metadata_album_album_name = '$album'";
     }
     if (isset($_POST["artist"]) && $_POST["artist"] != ""){
         $artist = $_POST["artist"];
         //sql string zu where array hinzufügen
-        $where[] = "master_metadata_album_artist_name = '$artist'";
+        $whereArtist = "AND master_metadata_album_artist_name = '$artist'";
+        $whereMetricArtist = "AND s.master_metadata_album_artist_name = '$artist'";
     }
 
     $sortOrder = "DESC";
@@ -214,7 +221,7 @@ function query(){
     //der zusammengesetze sql Befehl hat noch Spaß gemacht
         $sql = "SELECT $selectString, $order
                 FROM songData
-                WHERE $whereString 
+                WHERE $whereString $whereArtist $whereAlbum
                 GROUP BY $selectString
                 ORDER BY $sortBy DESC, $secondarySort ASC;";
     else{
@@ -224,7 +231,7 @@ function query(){
         //Prozentbasiertes filtern wird so möglich
         $subSql = "SELECT $selectString, COUNT(*) AS playCount 
                    FROM songData 
-                   WHERE $whereString
+                   WHERE $whereString $whereArtist $whereAlbum
                    GROUP BY $selectString
                    $minimumPlaysSql";
         
@@ -233,7 +240,7 @@ function query(){
         $sql = "SELECT $metricSelectString, sub.playCount, COUNT(*) AS metricCount, ROUND((COUNT(*) / sub.playCount) * 100, 1) AS percent
                 FROM songData AS s
                 JOIN ($subSql) AS sub ON $metricSubSelectString
-                WHERE $whereString AND $metricWhere
+                WHERE $whereString AND $metricWhere $whereMetricArtist $whereMetricAlbum
                 GROUP BY $metricSelectString, sub.playCount  
                 ORDER BY $metricSort $sortOrder, playCount DESC;";
     }
