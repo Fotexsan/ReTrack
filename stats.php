@@ -1,4 +1,7 @@
 <?php
+include "./logic/dbConnection.php";
+include "./logic/queries.php";
+
 session_start();
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     $accountId = $_SESSION['id'];
@@ -6,6 +9,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 } else {
     $_SESSION['info'] = "Stats";
     header("Location: login.php");
+    die();
 }
 ?>
 
@@ -50,7 +54,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     
     <div class="filter-container">
         <div id="filterForm">
-            <form action="logic/queries.php" method="POST">
+            <form action="stats.php" method="POST">
                 <div class="filter-header">
                     <h1>Filter</h1>
                 </div>
@@ -80,15 +84,16 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                         <div id="artistInputDiv">
                             <label for="artist">Artist (optional)</label>
                             <div class="search-container">
-                                <input type="text" name="artist" id="artist" autocomplete="off" placeholder="Start typing..." list="artistSuggestions">
-                                <datalist id="artistSuggestions"></datalist>
+                                <input type="text" name="artist" id="artist" autocomplete="off" placeholder="Start typing...">
+                                <div id="artistSuggestions" class="suggestions-box"></div>
                             </div>
                         </div>
+
                         <div id="albumInputDiv">
                             <label for="album">Album (optional)</label>
                             <div class="search-container">
-                                <input type="text" name="album" id="album" autocomplete="off" placeholder="Start typing..." list="albumSuggestions">
-                                <datalist id="albumSuggestions"></datalist>
+                                <input type="text" name="album" id="album" autocomplete="off" placeholder="Start typing...">
+                                <div id="albumSuggestions" class="suggestions-box"></div>
                             </div>
                         </div>
                     </div>
@@ -214,13 +219,27 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
             </form>
         </div>
     </div>
+    
+    <?php
+        if ($_SERVER["REQUEST_METHOD"] == "POST"){
+            $result = query();
 
+            for ($i = 0; $i<count($result); $i++){
+                echo "$i. ";
+                for ($j = 0; $j < count($result[$i]); $j++){
+                    $entry = $result[$i][$j];
+                    echo " $entry; ";
+                }
+                echo "<br><br>";
+            } 
+        }
+    ?>
                     
     
     <div class="results-container">
         <div class="results-header">
             <h2>Results</h2>
-            25 songs found
+            25 Songs found
         </div>
         
         <table>

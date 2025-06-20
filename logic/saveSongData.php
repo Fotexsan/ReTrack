@@ -7,13 +7,13 @@ function saveSongData($filename, $conn, $accountId){
     //alle Einträge der JSON durchgehen
     foreach ($data as $entry) {
 
-        //Podcasts und Songs ohne Namen werden gefiltert
+        //Podcasts und Songs ohne Namen und Einträge ohne laufzeit werden gefiltert
         if (!empty($entry['master_metadata_track_name']) && $entry["ms_played"] != 0){
 
-            //timestamp in richtiges Format bringen und offline Timestamp bevorzugen
+            //timestamp in richtiges Format bringen und offline timestamp bevorzugen
             if (!empty($entry["offline_timestamp"])) {
 
-                //spotify hat das Timestamp format zwischendrin geändert... (Wenn 13 Stellen in ms sonst in s)
+                //spotify hat das timestamp format zwischendrin geändert... (Wenn 13 Stellen in ms sonst in s)
                 if (strlen((string)$entry["offline_timestamp"]) >= 13)
                     $oTs = $entry["offline_timestamp"]/1000;
                 else{
@@ -43,7 +43,7 @@ function saveSongData($filename, $conn, $accountId){
             $offline = (int)$entry["offline"];
             $incognito = (int)$entry["incognito_mode"];
                 
-            //Daten in Datenbank eintragen
+            //Daten in Datenbank eintragen, wenn es neue sind
             $sql = "INSERT IGNORE INTO songData (
             accountId, ts, platform, ms_played, conn_country, master_metadata_track_name, master_metadata_album_artist_name,
             master_metadata_album_album_name, spotify_track_uri, reason_start, reason_end, shuffle, skipped, offline, incognito_mode) 

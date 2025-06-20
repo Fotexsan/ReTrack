@@ -1,77 +1,127 @@
-function getArtistSuggestions(searchTerm, accountId) {
-    return fetch(`./logic/searchSuggestions/getArtistSuggestions.php?term=${encodeURIComponent(searchTerm)}&accountId=${encodeURIComponent(accountId)}`)
-        .then(response => response.json());
-}
+function setupCustomAutocomplete(inputId, suggestionBoxId, fetchUrl, isAlbumMode = false) {
+    const input = document.getElementById(inputId);
+    const suggestionBox = document.getElementById(suggestionBoxId);
+    let currentRequest = 0;
+    let selectedIndex = -1;
+    let currentSuggestions = [];
 
-function getAlbumSuggestions(searchTerm, accountId) {
-    return fetch(`./logic/searchSuggestions/getAlbumSuggestions.php?term=${encodeURIComponent(searchTerm)}&accountId=${encodeURIComponent(accountId)}`)
-        .then(response => response.json());
-}
+    input.addEventListener("input", async () => {
+        const term = input.value.trim();
 
-function setupAutocomplete(inputElement, datalistElement, fetchFunction, additionalParam = null) {
-    let skipNextInput = false;
+        suggestionBox.innerHTML = "";
+        suggestionBox.style.display = "none";
+        selectedIndex = -1;
 
-    // Wenn der User per Klick etwas aus der Liste auswählt
-    inputElement.addEventListener('mousedown', () => {
-        skipNextInput = true;
-    });
+        if (term.length < 2) return;
 
-    inputElement.addEventListener('input', async function () {
-        const searchTerm = this.value.trim();
-
-        if (skipNextInput) {
-            skipNextInput = false;
-            datalistElement.innerHTML = ''; // Liste sicherheitshalber leeren
-            return;
-        }
-
-        if (searchTerm.length < 2) {
-            datalistElement.innerHTML = '';
-            return;
-        }
+        currentRequest++;
+        const thisRequest = currentRequest;
 
         try {
-            const suggestions = additionalParam
-                ? await fetchFunction(searchTerm, additionalParam)
-                : await fetchFunction(searchTerm);
-            datalistElement.innerHTML = '';
-            suggestions.forEach(suggestion => {
-                const option = document.createElement('option');
-                option.value = suggestion;
-                datalistElement.appendChild(option);
+            const response = await fetch(`${fetchUrl}?term=${encodeURIComponent(term)}`);
+            const suggestions = await response.json();
+
+            if (thisRequest !== currentRequest) return;
+
+            // Für Album: Objekte, für Artist: Strings
+            const seen = new Set();
+            const uniqueSuggestions = suggestions.filter(s => {
+                const key = isAlbumMode ? `${s.album} – ${s.artist}` : s;
+                if (seen.has(key)) return false;
+                seen.add(key);
+                return true;
             });
+
+            currentSuggestions = uniqueSuggestions;
+
+            if (uniqueSuggestions.length === 0) return;
+
+            uniqueSuggestions.forEach((suggestion, index) => {
+                const item = document.createElement("div");
+                item.classList.add("suggestion-item");
+
+                const displayText = isAlbumMode
+                    ? `${suggestion.album} – ${suggestion.artist}`
+                    : suggestion;
+
+                item.textContent = displayText;
+
+                item.addEventListener("click", () => {
+                    input.value = isAlbumMode ? suggestion.album : suggestion;
+                    suggestionBox.innerHTML = "";
+                    suggestionBox.style.display = "none";
+                });
+
+                suggestionBox.appendChild(item);
+            });
+
+            suggestionBox.style.display = "block";
         } catch (error) {
-            console.error('Error fetching suggestions:', error);
+            console.error("Autocomplete-Fehler:", error);
         }
     });
 
-    inputElement.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') {
+    input.addEventListener("keydown", (e) => {
+        const items = suggestionBox.querySelectorAll(".suggestion-item");
+
+        if (e.key === "ArrowDown") {
+            if (items.length === 0) return;
             e.preventDefault();
-            const options = datalistElement.querySelectorAll('option');
-            if (options.length > 0) {
-                this.value = options[0].value;
-                datalistElement.innerHTML = '';
+            selectedIndex = (selectedIndex + 1) % items.length;
+            updateHighlight(items);
+        }
+
+        else if (e.key === "ArrowUp") {
+            if (items.length === 0) return;
+            e.preventDefault();
+            selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+            updateHighlight(items);
+        }
+
+        else if (e.key === "Enter") {
+            if (items.length > 0 && selectedIndex >= 0) {
+                e.preventDefault();
+                const selected = currentSuggestions[selectedIndex];
+                input.value = isAlbumMode
+                    ? selected.album
+                    : selected;
+                suggestionBox.innerHTML = "";
+                suggestionBox.style.display = "none";
+                selectedIndex = -1;
+            } else if (items.length > 0) {
+                e.preventDefault();
+                const selected = currentSuggestions[0];
+                input.value = isAlbumMode
+                    ? selected.album
+                    : selected;
+                suggestionBox.innerHTML = "";
+                suggestionBox.style.display = "none";
+                selectedIndex = -1;
             }
         }
     });
+
+    document.addEventListener("click", (e) => {
+        if (!input.contains(e.target) && !suggestionBox.contains(e.target)) {
+            suggestionBox.style.display = "none";
+            selectedIndex = -1;
+        }
+    });
+
+    function updateHighlight(items) {
+        items.forEach((item, index) => {
+            if (index === selectedIndex) {
+                item.classList.add("highlight");
+                item.scrollIntoView({ block: "nearest" });
+            } else {
+                item.classList.remove("highlight");
+            }
+        });
+    }
 }
 
 
-
-// Initialisierung der Autocomplete-Funktionen
-document.addEventListener('DOMContentLoaded', function() {
-    const artistInput = document.getElementById('artist');
-    const artistSuggestions = document.getElementById('artistSuggestions');
-    const albumInput = document.getElementById('album');
-    const albumSuggestions = document.getElementById('albumSuggestions');
-    const accountIdInput = document.getElementById('accountId');
-    
-    if (artistInput && artistSuggestions && accountIdInput) {
-        setupAutocomplete(artistInput, artistSuggestions, getArtistSuggestions, accountIdInput.value);
-    }
-    
-    if (albumInput && albumSuggestions && accountIdInput) {
-        setupAutocomplete(albumInput, albumSuggestions, getAlbumSuggestions, accountIdInput.value);
-    }
+window.addEventListener("DOMContentLoaded", () => {
+    setupCustomAutocomplete("artist", "artistSuggestions", "./logic/searchSuggestions/getArtistSuggestions.php");
+    setupCustomAutocomplete("album", "albumSuggestions", "./logic/searchSuggestions/getAlbumSuggestions.php", true);
 });

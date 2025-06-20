@@ -15,6 +15,7 @@ const sortOrderRadio = document.querySelectorAll("input[name='sortOrder']");
 const subMetricRadio = document.querySelectorAll("input[name='subMetric']");
 
 const minPlaysDiv = document.getElementById("minPlaysDiv");
+const minPlays = document.getElementById("minPlays");
 
 //variablen für simple vs advanced time filter
 const simpleTimeSelect = document.getElementById("simpleTimeSelect");
@@ -91,6 +92,7 @@ function updateMetricDisplay(){
         //verstecke die Filter, die hier keinen Sinn machen
         sortSettingsDiv.classList.add("hidden");
         minPlaysDiv.classList.add("hidden");
+        minPlays.required = false;
 
         //setze subMetrix zurück
         total.checked = true;
@@ -105,9 +107,11 @@ function updateMetricDisplay(){
         //unterscheide ob minimum Plays angezeigt wird oder nicht
         if (subMetric == "percent" || sortOrder == "asc"){
             minPlaysDiv.classList.remove("hidden");
+            minPlays.required = true;
         }
         else{
            minPlaysDiv.classList.add("hidden");
+           minPlays.required = false;
         }
     }
 }
@@ -118,6 +122,9 @@ function updateTimeFilterDisplay(){
         advancedTimeDiv.classList.remove("overflow");
         advancedTimeDiv.classList.add("hidden");
         simpleTimeSelect.disabled = false;
+
+        dateRangeStart.required = false;
+        dateRangeEnd.required = false;
     }
     else{
         advancedTimeDiv.classList.remove("hidden");
@@ -132,11 +139,17 @@ function updateDateRangeDisplay(){
         dateRangeStart.disabled = false;
         dateRangeEnd.disabled = false;
 
+        dateRangeStart.required = true;
+        dateRangeEnd.required = true;
+
         simpleTimeSelect.disabled = true;
     }
     else{
         dateRangeStart.disabled = true;
         dateRangeEnd.disabled = true;
+
+        dateRangeStart.required = false;
+        dateRangeEnd.required = false;
 
         simpleTimeSelect.disabled = false; 
     }
@@ -189,6 +202,7 @@ subMetricRadio.forEach(radio =>{
 })
 
 timeFilterRadio.forEach(radio =>{
+    radio.addEventListener("change", updateDateRangeDisplay)
     radio.addEventListener("change", updateTimeFilterDisplay)
 })
 

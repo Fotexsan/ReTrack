@@ -20,11 +20,11 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["rePassw
 
         $result = ($conn->query($sql))->fetch_row();
 
+        //kein User gefunden, wird in Session gespeichert
         if ($result[0]>0){
             $_SESSION["error"] = 2;
         }
-
-        if (!isset($_SESSION["error"])){
+        else{
             //Account erstellen
             $sql= "INSERT INTO user (username, email, password) 
             VALUES ('$username', '$userEmail', '$userPassword')";

@@ -34,7 +34,7 @@ function connect(){
         die("Fehler bei Tabellenerstellung: ".$conn->connect_error);
     }
 
-    //songData Tabelle erstellen
+    //songData Tabelle erstellen, wobei 'accountId, ts, ms_played, spotify_track_uri' genutzt wird um Einträge eindeutig zu identifizieren
     $sql = "CREATE TABLE IF NOT EXISTS songData(
     songId INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     accountId INT UNSIGNED,
