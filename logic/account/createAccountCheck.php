@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "dbConnection.php";
+include "../dbConnection.php";
 
 if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["rePassword"]) && isset($_POST["username"])){
     //User Eingabe speichern
@@ -42,7 +42,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["rePassw
             $_SESSION["username"] = $username;
             $_SESSION["id"] = $userId;
 
-            header("Location: ../homepage.php");
+            header("Location: ../../homepage.php");
             die();
         }
         $conn->close();
@@ -51,6 +51,6 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["rePassw
         $_SESSION["error"] = 1;
     }
 }
-header("Location: ../createAccount.php");
+header("Location: ../../createAccount.php");
 die();
 ?>

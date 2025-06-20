@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "dbConnection.php";
+include "../dbConnection.php";
 
 if (isset($_POST["email"]) && isset($_POST["password"])){
     //User Eingabe speichern
@@ -31,13 +31,13 @@ if (isset($_POST["email"]) && isset($_POST["password"])){
         $_SESSION['id'] = $userId;
 
         
-        header("Location: ../homepage.php");
+        header("Location: ../../homepage.php");
         die();
     }
     else{
         $_SESSION['error'] = 1;
     }
 }
-header("Location: ../login.php");
+header("Location: ../../login.php");
 die();
 ?>

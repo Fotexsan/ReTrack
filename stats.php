@@ -1,6 +1,4 @@
 <?php
-include "./logic/dbConnection.php";
-include "./logic/queries.php";
 
 session_start();
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
@@ -22,8 +20,9 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     <title>ReTrack - Stats</title>
     <link rel="stylesheet" href="./css/main.css">
     <link rel="stylesheet" href="./css/filter.css">
-    <script src="./logic/filterDisplay.js" defer></script>
-    <script src="./logic/searchSuggestions/autocomplete.js" defer></script>
+    <script src="./logic/stats/filterDisplay.js" defer></script>
+    <script src="./logic/stats/searchSuggestions/autocomplete.js" defer></script>
+    <script src="./logic/stats/showStats.js" defer></script>
 </head>
 <body>
     <nav class="navbar">
@@ -40,7 +39,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                     "<div class='dropdown'>
                         <button class='dropbtn'>$username</button>
                         <div class='dropdown-content'>
-                            <a href='logic/logout.php' class='logout'>Log out</a>
+                            <a href='logic/account/logout.php' class='logout'>Log out</a>
                         </div>
                     </div>";
                 }
@@ -220,23 +219,10 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
         </div>
     </div>
     
-    <?php
-        if ($_SERVER["REQUEST_METHOD"] == "POST"){
-            $result = query();
-
-            for ($i = 0; $i<count($result); $i++){
-                echo "$i. ";
-                for ($j = 0; $j < count($result[$i]); $j++){
-                    $entry = $result[$i][$j];
-                    echo " $entry; ";
-                }
-                echo "<br><br>";
-            } 
-        }
-    ?>
+    
                     
     
-    <div class="results-container">
+    <div class="results-container" id="results">
         <div class="results-header">
             <h2>Results</h2>
             25 Songs found
@@ -291,5 +277,8 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
             </tbody>
         </table>
     </div>
+
+
+
 </body>
 </html>

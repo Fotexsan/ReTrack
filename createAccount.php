@@ -31,7 +31,7 @@
 
     <div class="form-box">
         <h1 class="form-h1">Create Account</h1>
-        <form action="logic/createAccountCheck.php" method="POST">
+        <form action="logic/account/createAccountCheck.php" method="POST">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" placeholder="Username" required>
 

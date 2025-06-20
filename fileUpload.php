@@ -46,7 +46,7 @@
                     "<div class='dropdown'>
                         <button class='dropbtn'>$username</button>
                         <div class='dropdown-content'>
-                            <a href='logic/logout.php' class='logout'>Log out</a>
+                            <a href='logic/account/logout.php' class='logout'>Log out</a>
                         </div>
                     </div>";
                 }

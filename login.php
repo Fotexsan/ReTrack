@@ -29,7 +29,7 @@
 
     <div class="form-box">
         <h1 class="form-h1">Login</h1>
-        <form action ="logic/loginCheck.php" method="POST">
+        <form action ="logic/account/loginCheck.php" method="POST">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
             <br>

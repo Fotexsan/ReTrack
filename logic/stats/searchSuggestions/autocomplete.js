@@ -122,6 +122,6 @@ function setupCustomAutocomplete(inputId, suggestionBoxId, fetchUrl, isAlbumMode
 
 
 window.addEventListener("DOMContentLoaded", () => {
-    setupCustomAutocomplete("artist", "artistSuggestions", "./logic/searchSuggestions/getArtistSuggestions.php");
-    setupCustomAutocomplete("album", "albumSuggestions", "./logic/searchSuggestions/getAlbumSuggestions.php", true);
+    setupCustomAutocomplete("artist", "artistSuggestions", "./logic/stats/searchSuggestions/getArtistSuggestions.php");
+    setupCustomAutocomplete("album", "albumSuggestions", "./logic/stats/searchSuggestions/getAlbumSuggestions.php", true);
 });
