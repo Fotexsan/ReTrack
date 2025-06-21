@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     $accountId = $_SESSION['id'];
@@ -221,61 +220,8 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     
     
                     
-    
     <div class="results-container" id="results">
-        <div class="results-header">
-            <h2>Results</h2>
-            25 Songs found
-        </div>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Title</th>
-                    <th>Artist</th>
-                    <th>Album</th>
-                    <th>Plays</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Blinding Lights</td>
-                    <td>The Weeknd</td>
-                    <td>After Hours</td>
-                    <td>127</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Save Your Tears</td>
-                    <td>The Weeknd</td>
-                    <td>After Hours</td>
-                    <td>98</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Starboy</td>
-                    <td>The Weeknd, Daft Punk</td>
-                    <td>Starboy</td>
-                    <td>87</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Take My Breath</td>
-                    <td>The Weeknd</td>
-                    <td>Dawn FM</td>
-                    <td>76</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>Die For You</td>
-                    <td>The Weeknd</td>
-                    <td>Starboy</td>
-                    <td>65</td>
-                </tr>
-            </tbody>
-        </table>
+        No filters applied yet
     </div>
 
 

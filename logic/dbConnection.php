@@ -52,10 +52,26 @@ function connect(){
     skipped BOOLEAN,
     offline BOOLEAN,
     incognito_mode BOOLEAN,
-    FOREIGN KEY (accountId) REFERENCES user(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_entry (accountId, ts, ms_played, spotify_track_uri)
-    )";
 
+    FOREIGN KEY (accountId) REFERENCES user(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_entry (accountId, ts, ms_played, spotify_track_uri),
+    
+    INDEX idx_accountId (accountId),
+    INDEX idx_ts (ts),
+    INDEX idx_track (master_metadata_track_name),
+    INDEX idx_artist (master_metadata_album_artist_name),
+    INDEX idx_album (master_metadata_album_album_name),
+    INDEX idx_reason_start (reason_start),
+    INDEX idx_reason_end (reason_end),
+    INDEX idx_skipped (skipped),
+    INDEX idx_shuffle (shuffle),
+
+    INDEX idx_combined_track_artist_album (master_metadata_track_name, master_metadata_album_artist_name, master_metadata_album_album_name),
+    INDEX idx_account_grouping (accountId, master_metadata_track_name, master_metadata_album_artist_name, master_metadata_album_album_name),
+    INDEX idx_album_artist_id (accountId, master_metadata_album_album_name, master_metadata_album_artist_name),
+    INDEX idx_artist_id (accountId, master_metadata_album_artist_name)
+    )";
+    //indizes für performance (dringend notwendig)
     if($conn->query($sql) === FALSE){
         die("Fehler bei Tabellenerstellung: ".$conn->connect_error);
     }

@@ -114,7 +114,6 @@ function query(){
             break;
         case "mDirect":
             $metricWhere = "reason_start = 'clickrow'";
-            break;
     }
 
     //Zeit Filter
@@ -136,7 +135,6 @@ function query(){
                     break;
                 case "year":
                     $timestamp = strtotime("-1 Year");
-                    break;
             }
             //timestamp wird ins passende Format gebracht
             $date = date("Y-m-d H:i:s", $timestamp);
@@ -217,6 +215,8 @@ function query(){
     //where array zu string konvertieren
     $whereString = implode(" AND ", $where);
 
+    $conn = connect();
+
     if ($_POST["metric"] == "mPlayed" || $_POST["metric"]== "mTime")
     //der zusammengesetze sql Befehl hat noch Spaß gemacht
         $sql = "SELECT $selectString, $order
@@ -229,25 +229,46 @@ function query(){
         //hier wird erstmal gezählt wie oft der Song in den Constraints (ohne metric) überhaupt vorkommt
         //So kann der minimumPlays Filter richtig angewendet werden
         //Prozentbasiertes filtern wird so möglich
-        $subSql = "SELECT $selectString, COUNT(*) AS playCount 
-                   FROM songData 
-                   WHERE $whereString $whereArtist $whereAlbum
-                   GROUP BY $selectString
-                   $minimumPlaysSql";
-        
-        //hier wird jetzt auf die übrig gebliebene Tabelle metric angewendet und das gezählt
-        //dabei wird sowohl das prozentbasierte als auch das totale Ergebnis berechnet
-        $sql = "SELECT $metricSelectString, sub.playCount, COUNT(*) AS metricCount, ROUND((COUNT(*) / sub.playCount) * 100, 1) AS percent
+        //$subSql = "SELECT $selectString, COUNT(*) AS playCount 
+        //           FROM songData 
+        //           WHERE $whereString $whereArtist $whereAlbum
+        //           GROUP BY $selectString
+        //           $minimumPlaysSql";
+        //
+        ////hier wird jetzt auf die übrig gebliebene Tabelle metric angewendet und das gezählt
+        ////dabei wird sowohl das prozentbasierte als auch das totale Ergebnis berechnet
+        //$sql = "SELECT $metricSelectString, sub.playCount, COUNT(*) AS metricCount, ROUND((COUNT(*) / sub.playCount) * 100, 2) AS percent
+        //        FROM songData AS s
+        //        JOIN ($subSql) AS sub ON $metricSubSelectString
+        //        WHERE $whereString AND $metricWhere $whereMetricArtist $whereMetricAlbum
+        //        GROUP BY $metricSelectString, sub.playCount  
+        //        ORDER BY $metricSort $sortOrder, playCount DESC;";
+
+        $subSql = "
+        CREATE TEMPORARY TABLE sub AS
+        SELECT $selectString, COUNT(*) AS playCount
+        FROM songData
+        WHERE $whereString $whereArtist $whereAlbum
+        GROUP BY $selectString $minimumPlaysSql";
+
+        $conn->query("DROP TEMPORARY TABLE IF EXISTS sub");
+
+        if ($conn->query($subSql) === FALSE) {
+            die("Fehler beim Erstellen der Tabelle: ".$conn->error);
+        }
+
+        // Schritt 2: Hauptabfrage mit metricWhere und Join auf sub
+        $sql = "SELECT $metricSelectString, sub.playCount, COUNT(*) AS metricCount,
+                ROUND((COUNT(*) / sub.playCount) * 100, 2) AS percent
                 FROM songData AS s
-                JOIN ($subSql) AS sub ON $metricSubSelectString
+                JOIN sub ON $metricSubSelectString
                 WHERE $whereString AND $metricWhere $whereMetricArtist $whereMetricAlbum
-                GROUP BY $metricSelectString, sub.playCount  
-                ORDER BY $metricSort $sortOrder, playCount DESC;";
+                GROUP BY $metricSelectString, sub.playCount
+                ORDER BY $metricSort $sortOrder, sub.playCount DESC;";
     }
 
 
-    echo "$sql<br><br>";
-    $conn = connect();
+    //echo "$sql<br><br>";
 
     $result = $conn->query($sql);
 
@@ -256,15 +277,5 @@ function query(){
     $conn->close();
 
     return $result;
-
-
-    //for ($i = 0; $i<count($result); $i++){
-    //    echo "$i. ";
-    //    for ($j = 0; $j < count($result[$i]); $j++){
-    //        $entry = $result[$i][$j];
-    //        echo " $entry; ";
-    //    }
-    //    echo "<br><br>";
-    //}
 }
 ?>

@@ -5,7 +5,7 @@ document.querySelector("form").addEventListener("submit", async function (event)
     const form = event.target;
     const formData = new FormData(form);
     
-    document.getElementById("results").innerHTML = "Loading...";
+    document.getElementById("results").innerHTML = "This could take a moment...";
     const response = await fetch('./logic/stats/showStats.php', {
         method: 'POST',
         body: formData

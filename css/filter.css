@@ -239,6 +239,11 @@ input:focus[type="checkbox"], input:focus[type="radio"]{
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 10px 25px #000000c0;
+    text-align: center;
+}
+
+h2 {
+    margin-top:23px;
 }
 
 .results-header {
@@ -252,6 +257,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     color: #e3e3e3;
+    text-align: left;
 }
 
 th {
