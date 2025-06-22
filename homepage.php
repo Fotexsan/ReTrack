@@ -47,8 +47,10 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     <div class="content">
 
         <h1>Welcome to ReTrack</h1>
-        <p>See what Spotify Wrapped doesn't tell you</p>
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reprehenderit consequuntur laboriosam quas, exercitationem consequatur debitis nostrum nemo aperiam laborum dolorum dignissimos aspernatur, sequi numquam nihil in, delectus officia illo obcaecati?</p>
+        <p>See what Spotify Wrapped doesn't tell you.</p>
+        <p>Have you ever wondered which song you have listend to for the longest total time? Or which song you have skipped the most? 
+            Are you impatient and can't wait until December for Spotify Wrapped? For all that and more, ReTrack has got you covered!
+        </p>
         
         <p>Click <a href="fileUpload.php">here</a> to get to the file upload.</p>  
 
