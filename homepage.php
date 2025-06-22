@@ -56,7 +56,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 
         <h2>How it works</h2>
         <ol>
-            <li>Download your Spotify Data</li>
+            <li>Download your Spotify Extended Streaming History <a href="https://www.spotify.com/de/account/privacy/">here</a></li>
             <li>Create a ReTrack account</li>
             <li>Upload your Spotify Data</li>
             <li>View your stats</li>
