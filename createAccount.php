@@ -1,7 +1,8 @@
 <?php
     session_start();
+    //wenn bereits eingeloggt ist auf homepage weiterleiten 
     if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true) {
-        header("Location: fileUpload.php"); //Fehler Nachricht hinzufügen
+        header("Location: homepage.php");
     }
 ?>
 
@@ -15,6 +16,7 @@
 </head>
 
 <body>
+    <!--Navigationsbar -->
     <nav class="navbar">
         <div class="nav-left">
             <a href="homepage.php" class="nav-link">Home</a>
@@ -28,9 +30,11 @@
     </nav>
 
 
-
+    <!-- Create Account Formularfeld -->
     <div class="form-box">
         <h1 class="form-h1">Create Account</h1>
+
+        <!-- Eingabe wird auf createAccountCheck.php verarbeitet-->
         <form action="logic/account/createAccountCheck.php" method="POST">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" placeholder="Username" required>
@@ -48,19 +52,19 @@
         </form>
 
         <?php
-        if (isset($_SESSION["error"])){
-            $error = $_SESSION["error"];
-            switch ($error){
-                case 1:
-                    echo "<p class='error'>Password and repeated password are different</p>";
-                    break;
-                case 2:
-                    echo "<p class='error'>Email is already in use</p>";
+            //Nachricht anzeigen falls Account Erstellung fehlgeschlagen ist
+            if (isset($_SESSION["error"])){
+                $error = $_SESSION["error"];
+                switch ($error){
+                    case 1:
+                        echo "<p class='error'>Password and repeated password are different</p>";
+                        break;
+                    case 2:
+                        echo "<p class='error'>Email is already in use</p>";
+                }
+                unset($_SESSION["error"]);
             }
-            unset($_SESSION["error"]);
-        }
         ?>
-
         <p>Already have an account? <a href="login.php">Login</a></p>
     </div>
 </body>

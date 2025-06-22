@@ -261,10 +261,12 @@ table {
 }
 
 th {
+    position: sticky;
     background-color: #1DB954;
     color: #0f0f0f;
     padding: 12px;
     text-align: left;
+    top: 0
 }
 
 td {

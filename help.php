@@ -1,10 +1,9 @@
 <?php
     session_start();
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+        //hole accountId und username aus der Session
         $accountId = $_SESSION['id'];
         $username = $_SESSION['username'];
-    } else {
-        //echo "Please log in first to see this page.";
     }
 ?>
 
@@ -17,7 +16,8 @@
     <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
-     <nav class="navbar">
+    <!--Navigationsbar -->
+    <nav class="navbar">
         <div class="nav-left">
             <a href="homepage.php" class="nav-link">Home</a>
             <a href="stats.php" class="nav-link">Stats</a>

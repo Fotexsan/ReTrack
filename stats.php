@@ -1,9 +1,11 @@
 <?php
 session_start();
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+    //hole accountId und username aus der Session
     $accountId = $_SESSION['id'];
     $username = $_SESSION['username'];
 } else {
+    //wenn Nutzer nicht eingeloggt wird dieser zur login Seite weitergeleitet
     $_SESSION['info'] = "Stats";
     header("Location: login.php");
     die();
@@ -24,6 +26,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     <script src="./logic/stats/showStats.js" defer></script>
 </head>
 <body>
+    <!--Navigationsbar -->
     <nav class="navbar">
         <div class="nav-left">
             <a href="homepage.php" class="nav-link">Home</a>
@@ -131,7 +134,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                             <label for="desc">Descending</label>
                         </div>
                         <div class="filter-group">
-                            <h3>Sub metric</h3>
+                            <h3>Filter mode</h3>
                             <input type="radio" name="subMetric" id="total" value="total" checked/>
                             <label for="total">Total</label>
                             <input type="radio" name="subMetric" id="percent" value="percent"/>

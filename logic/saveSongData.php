@@ -1,16 +1,16 @@
 <?php
 function saveSongData($filename, $conn, $accountId){
-    // Datei einlesen
+    //Datei einlesen
     $json = file_get_contents($filename);
     $data = json_decode($json, true);
 
     //alle Einträge der JSON durchgehen
     foreach ($data as $entry) {
 
-        //Podcasts und Songs ohne Namen und Einträge ohne laufzeit werden gefiltert
+        //Podcasts und Songs ohne Namen und Einträge ohne laufzeit werden direkt gefiltert
         if (!empty($entry['master_metadata_track_name']) && $entry["ms_played"] != 0){
 
-            //timestamp in richtiges Format bringen und offline timestamp bevorzugen
+            //timestamp in richtiges Format bringen, offline timestamp bevorzugen
             if (!empty($entry["offline_timestamp"])) {
 
                 //spotify hat das timestamp format zwischendrin geändert... (Wenn 13 Stellen in ms sonst in s)
@@ -19,10 +19,11 @@ function saveSongData($filename, $conn, $accountId){
                 else{
                     $oTs = $entry["offline_timestamp"];
                 }
-
+                //timestamp formattieren
                 $ts = date('Y-m-d H:i:s', $oTs);
             } 
             else {
+                //timestamp formattieren
                 $timestamp = new DateTime($entry["ts"]);
                 $ts = $timestamp->format('Y-m-d H:i:s');
             }
@@ -43,7 +44,7 @@ function saveSongData($filename, $conn, $accountId){
             $offline = (int)$entry["offline"];
             $incognito = (int)$entry["incognito_mode"];
                 
-            //Daten in Datenbank eintragen, wenn es neue sind
+            //Daten in Datenbank eintragen, wenn es neue sind über unique key
             $sql = "INSERT IGNORE INTO songData (
             accountId, ts, platform, ms_played, conn_country, master_metadata_track_name, master_metadata_album_artist_name,
             master_metadata_album_album_name, spotify_track_uri, reason_start, reason_end, shuffle, skipped, offline, incognito_mode) 
@@ -51,6 +52,7 @@ function saveSongData($filename, $conn, $accountId){
 
             $conn->query($sql);
             
+            //Songcounter erhöhen, wenn änderungen gemacht wurden
             if ($conn->affected_rows > 0) {
                 $GLOBALS["songcounter"]++;
             }

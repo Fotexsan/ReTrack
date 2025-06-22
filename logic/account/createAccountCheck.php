@@ -33,6 +33,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["rePassw
                 die();
             }
             
+            //hole userId von neu angelegtem User
             $userId = $conn->insert_id;
 
             $conn->close();
@@ -51,6 +52,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["rePassw
         $_SESSION["error"] = 1;
     }
 }
+//Bei Fehler zurück zur createAccount Seite leiten
 header("Location: ../../createAccount.php");
 die();
 ?>

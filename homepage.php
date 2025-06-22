@@ -1,6 +1,7 @@
 <?php 
 session_start(); 
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {     
+    //hole accountId und username aus der Session
     $username = $_SESSION['username'];
     $userid = $_SESSION['id'];
 }
@@ -15,7 +16,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     <link rel="stylesheet" href="css/main.css"> 
 </head> 
 <body>    
-     
+     <!--Navigationsbar -->
     <nav class="navbar">
         <div class="nav-left">
             <a href="homepage.php" class="nav-link active">Home</a>

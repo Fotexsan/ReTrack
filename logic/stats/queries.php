@@ -1,6 +1,6 @@
 <?php
+//Funktion, die die eingestellten Filter zu einem sql query macht und einen array mit den gefilterten Daten zurückgibt
 function query(){
-
     //where SQL array
     $where = [];
 
@@ -16,6 +16,7 @@ function query(){
         case "song":
             //für simplen sql Befehl
             $selectString = "master_metadata_track_name, master_metadata_album_artist_name, master_metadata_album_album_name";
+            //soll bei gleichem Sortierkriterium nach Songname sortiert werden
             $secondarySort = "master_metadata_track_name";
 
             //für komplexeren sql Befehl
@@ -26,7 +27,8 @@ function query(){
             break;
         case "album":
             //für simplen sql Befehl
-            $selectString = "master_metadata_album_album_name, master_metadata_album_artist_name";
+            $selectString = "master_metadata_album_album_name, master_metadata_album_artist_name";#
+            //soll bei gleichem Sortierkriterium nach Albumname sortiert werden
             $secondarySort = "master_metadata_album_album_name";
 
             //für komplexeren sql Befehl
@@ -37,6 +39,7 @@ function query(){
         case "artist":
             //für simplen sql Befehl
             $selectString = "master_metadata_album_artist_name";
+            //soll bei gleichem Sortierkriterium nach Künstlername sortiert werden
             $secondarySort = "master_metadata_album_artist_name";
 
             //für komplexeren sql Befehl
@@ -53,13 +56,15 @@ function query(){
 
     if (isset($_POST["album"]) && $_POST["album"] != ""){
         $album = $_POST["album"];
-        //sql string zu where array hinzufügen
+
+        //bekommt eigenen sql string, für unterscheidung zwischen simple und komplex
         $whereAlbum = "AND master_metadata_album_album_name = '$album'";
         $whereMetricAlbum = "AND s.master_metadata_album_album_name = '$album'";
     }
     if (isset($_POST["artist"]) && $_POST["artist"] != ""){
         $artist = $_POST["artist"];
-        //sql string zu where array hinzufügen
+
+        //bekommt eigenen sql string, für unterscheidung zwischen simple und komplex
         $whereArtist = "AND master_metadata_album_artist_name = '$artist'";
         $whereMetricArtist = "AND s.master_metadata_album_artist_name = '$artist'";
     }
@@ -67,6 +72,7 @@ function query(){
     $sortOrder = "DESC";
     //Sort Settings
     if ($_POST["metric"] != "mPlayed" && $_POST["metric"] != "mTime"){
+        //nur relevant bei komplexer abfrage
         $minimumPlaysFlag = false;
         $minimumPlaysSql = "";
         $metricSort = "metricCount";
@@ -88,16 +94,18 @@ function query(){
         }
     }
 
+    //standard festlegen
     $order = "COUNT(*) as playCount";
     $sortBy = "playCount";
 
-    //Filter auswahl
+    //Filter spezifische wheres zu where array hinzufügen
     switch($_POST["metric"]){
         case "mPlayed":
             //nur Songs zählen die mind 30s gelaufen sind
             $where[] = "ms_played >= 30000";
             break;
         case "mTime":
+            //standard überschreiben
             $order = "SUM(ms_played) as totalTime";
             $sortBy = "totalTime";
             break;  
@@ -118,7 +126,7 @@ function query(){
 
     //Zeit Filter
     if ($_POST["timeFilter"] == "simple" || !isset($_POST["dateRange"])){
-        //simpler Zeitraum input
+        //simpler Zeitraum
         if ($_POST["simpleTimeSelect"] != "allTime"){
             switch($_POST["simpleTimeSelect"]){
                 case "twoWeeks":
@@ -149,6 +157,7 @@ function query(){
         $endDate = $_POST["endDate"];
         $endDate .= " 23:59:59"; //damit letzter Tag inkludiert ist
 
+        //zu where array hinzufügen
         $where[] = "ts BETWEEN '$startDate' AND '$endDate'";
     }
 
@@ -215,6 +224,7 @@ function query(){
     //where array zu string konvertieren
     $whereString = implode(" AND ", $where);
 
+    //Datenbank verbindung aufbauen
     $conn = connect();
 
     if ($_POST["metric"] == "mPlayed" || $_POST["metric"]== "mTime")
@@ -225,11 +235,12 @@ function query(){
                 GROUP BY $selectString
                 ORDER BY $sortBy DESC, $secondarySort ASC;";
     else{
-    //der hier nicht mehr.
+    //der hier nicht mehr
+
         //alte temporäre Tabelle löschen
         $conn->query("DROP TEMPORARY TABLE IF EXISTS sub");
 
-        //neue Temporäre Tabelle anlegen, die gesamt Anzahl an einträgen für die Filter (ohne metric zählt)
+        //neue Temporäre Tabelle anlegen, die gesamt Anzahl an Einträgen für die Filter (ohne metric) zählt
         //macht minimumPlays und percentage Based sortieren möglich
         $subSql = "CREATE TEMPORARY TABLE sub AS
                    SELECT $selectString, COUNT(*) AS playCount
@@ -243,7 +254,7 @@ function query(){
             die("Fehler beim Erstellen der Tabelle: ".$conn->error);
         }
 
-        //die tatsächliche sql Abfrage
+        //die eigentliche sql Abfrage
         $sql = "SELECT $metricSelectString, sub.playCount, COUNT(*) AS metricCount,
                 ROUND((COUNT(*) / sub.playCount) * 100, 2) AS percent
                 FROM songData AS s

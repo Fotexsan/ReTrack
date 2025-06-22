@@ -1,11 +1,12 @@
 <?php
-require_once "../../dbConnection.php";
-
+include "../../dbConnection.php";
 
 session_start();
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+    //hole accountId aus der Session
     $id = $_SESSION['id'];
 } else {
+    //wenn Nutzer nicht eingeloggt wird dieser zur login Seite weitergeleitet
     header("Location: login.php");
     die();
 }
@@ -14,7 +15,7 @@ header('Content-Type: application/json');
 
 if (!isset($_GET['term'])) {
     echo json_encode([]);
-    exit;
+    die();
 }
 
 $term = $_GET['term'];

@@ -12,10 +12,9 @@ if (isset($_POST["email"]) && isset($_POST["password"])){
 
     //Checken ob User mit den Daten existiert
     $sql = "SELECT id, username 
-    FROM user 
-    WHERE email = '$userEmail' 
-    AND password = '$userPassword' 
-    LIMIT 1;";
+            FROM user 
+            WHERE email = '$userEmail' AND password = '$userPassword' 
+            LIMIT 1;";
 
     $result = $conn->query($sql);
 
@@ -23,6 +22,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])){
 
     //bei erfolgreicher Anmeldung angemeldet zur homepage weiterleiten
     if ($result && $row = $result->fetch_assoc()) {
+        //Daten in Session speichern
         $username = $row['username'];
         $userId = $row['id'];
 
@@ -38,6 +38,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])){
         $_SESSION['error'] = 1;
     }
 }
+//Bei Fehler zurück zur login Seite leiten
 header("Location: ../../login.php");
 die();
 ?>

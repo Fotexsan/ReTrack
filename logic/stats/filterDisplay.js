@@ -1,3 +1,4 @@
+//wird verwendet, um die Filter Anzeige zu steuern
 //variablen für Category Display
 const categorySelect = document.getElementById("category");
 
@@ -45,11 +46,12 @@ const endTime = document.getElementById("endTime")
 
 //funktion, die Anzeige von Category abhängigen Filtern steuert
 function updateSearchInput(){
+    //momentanen category Wert holen
     const category = categorySelect.value;
 
     switch(category){
         case "song":
-            //blockiere artist oder album eingabe
+            //blockiere artist oder album eingabe wenn in eines der beiden getippt wird
             if (artistInput.value){
                 albumInput.disabled = true;
                 artistInput.disabled = false;
@@ -69,6 +71,7 @@ function updateSearchInput(){
             albumInput.disabled = true;
             artistInput.disabled = true;
 
+            //setzte album/artist Wert zurück
             albumInput.value ="";
             artistInput.value ="";
             break;
@@ -78,6 +81,7 @@ function updateSearchInput(){
             artistInput.disabled = false;
             albumInput.disabled = true;
 
+            //setzte album Wert zurück
             albumInput.value ="";
             break;
     }
@@ -94,7 +98,7 @@ function updateMetricDisplay(){
         minPlaysDiv.classList.add("hidden");
         minPlays.required = false;
 
-        //setze subMetrix zurück
+        //setze subMetric zurück
         total.checked = true;
     }
     else{
@@ -115,93 +119,116 @@ function updateMetricDisplay(){
         }
     }
 }
-
+//funktion, die Anzeige von Zeit abhängigen Filtern steuert
 function updateTimeFilterDisplay(){
+    //hole Wert von timeFilterMode
     const timeFilter = document.querySelector("input[name='timeFilter']:checked").value;
+
     if(timeFilter == "simple"){
-        advancedTimeDiv.classList.remove("overflow");
+        //verstecke advanced settings
         advancedTimeDiv.classList.add("hidden");
+
+        //aktiviere simpleTimeSelect
         simpleTimeSelect.disabled = false;
 
+        //für animation wichtig
+        advancedTimeDiv.classList.remove("overflow");
+
+        //setzte required Status von dateRange zurück
         dateRangeStart.required = false;
         dateRangeEnd.required = false;
     }
     else{
+        //zeige advanced settings
         advancedTimeDiv.classList.remove("hidden");
         setTimeout(() => {
+            //für animation wichtig
             advancedTimeDiv.classList.add("overflow");
         }, 300);
     }
 }
-
+//funktion für DateRange
 function updateDateRangeDisplay(){
     if(dateRangeCheck.checked){
+        //aktiviere dateRange inputs
         dateRangeStart.disabled = false;
         dateRangeEnd.disabled = false;
 
+        //setzte dateRange inputs auf required
         dateRangeStart.required = true;
         dateRangeEnd.required = true;
 
+        //deaktiviere simpleTimeSelect
         simpleTimeSelect.disabled = true;
     }
     else{
+        //deaktiviere dateRange inputs
         dateRangeStart.disabled = true;
         dateRangeEnd.disabled = true;
 
+        //setzte dateRange inputs auf nicht required
         dateRangeStart.required = false;
         dateRangeEnd.required = false;
 
+        //aktiviere simpleTimeSelect
         simpleTimeSelect.disabled = false; 
     }
 }
-
+//funktion für Month Checklist
 function updateMonthDisplay() {
-    const monthDropdown = document.getElementById("monthDropdown");
-
     if (monthCheck.checked) {
+        //aktiviere Dropdownmenü
         monthDropdown.classList.remove("disabled");
     } else {
-        monthDropdown.classList.remove("open"); // Schließen, wenn offen
+        //deaktiviere Dropdownmenü 
         monthDropdown.classList.add("disabled");
+        //schließ es, falls offen
+        monthDropdown.classList.remove("open");
     }
 }
-
+//funktion für Weekday Checklist
 function updateWeekdayDisplay() {
-
     if (weekdayCheck.checked) {
+        //aktiviere Dropdownmenü
         weekdayDropdown.classList.remove("disabled");
     } else {
-        weekdayDropdown.classList.remove("open"); // Schließen, wenn offen
+        //deaktiviere Dropdownmenü 
         weekdayDropdown.classList.add("disabled");
+        //schließ es, falls offen
+        weekdayDropdown.classList.remove("open");
     }
 }
-
+//funktion für Time inputs
 function updateTimeDisplay(){
     if(timeCheck.checked){
+        //aktiviere time inputs
         startTime.disabled = false;
         endTime.disabled = false;
     }
     else{
+        //deaktiviere time inputs
         startTime.disabled = true;
         endTime.disabled = true;  
     }
 }
-
+//eventListeners
+//updateSearchInput wird aufgerufen wenn sich etwas bei category, artist oder album ändert
 categorySelect.addEventListener("change", updateSearchInput);
 artistInput.addEventListener("change", updateSearchInput);
 albumInput.addEventListener("change", updateSearchInput);
 
+//updateMetricDisplay wird aufgerufen wenn sich etwas bei metric, sortOrder oder subMetric ändert
 metricSelect.addEventListener("change", updateMetricDisplay);
-
 sortOrderRadio.forEach(radio =>{
     radio.addEventListener("change", updateMetricDisplay)
 })
-
 subMetricRadio.forEach(radio =>{
     radio.addEventListener("change", updateMetricDisplay)
 })
 
+
 timeFilterRadio.forEach(radio =>{
+    //ruft beide auf, damit required und aktiviert immer stimmt
     radio.addEventListener("change", updateDateRangeDisplay)
     radio.addEventListener("change", updateTimeFilterDisplay)
 })
@@ -211,37 +238,40 @@ monthCheck.addEventListener("change", updateMonthDisplay);
 weekdayCheck.addEventListener("change", updateWeekdayDisplay);
 timeCheck.addEventListener("change", updateTimeDisplay);
 
+//funktionen, damit Dropdown Checklist angezeigt wird
 monthButton.addEventListener("click", () => {
     const monthDropdown = document.getElementById("monthDropdown");
     if (!monthDropdown.classList.contains("disabled")) {
+        //wenn monthDropdown button aktiviert ist, öffnet sich das Dropdown auf klick
         monthDropdown.classList.toggle("open");
     }
 });
-
 document.addEventListener("click", function (e) {
     const monthDropdown = document.getElementById("monthDropdown");
     if (!monthDropdown.contains(e.target)) {
+        //schließe monthDropdown wenn es einen klick außerhalb des Dropdowns ist
         monthDropdown.classList.remove("open");
     }
 });
 
+//funktionen, damit Dropdown Checklist angezeigt wird
 weekdayButton.addEventListener("click", () => {
     const weekdayDropdown = document.getElementById("weekdayDropdown");
     if (!weekdayDropdown.classList.contains("disabled")) {
+        //wenn weekdayDropdown button aktiviert ist, öffnet sich das Dropdown auf klick
         weekdayDropdown.classList.toggle("open");
     }
 });
-
 document.addEventListener("click", function (e) {
     const weekdayDropdown = document.getElementById("weekdayDropdown");
     if (!weekdayDropdown.contains(e.target)) {
+        //schließe weekdayDropdown wenn es einen klick außerhalb des Dropdowns ist
         weekdayDropdown.classList.remove("open");
     }
 });
 
-//Schließ/öffnen animationen werden erst nach vollständigem laden hinzugefügt
+//Schließ/öffnen animationen werden erst hinzugefügt, wenn Seite komplett geladen ist
 document.addEventListener("DOMContentLoaded", () => {
-  // Erst nach dem Laden die Transition aktivieren
   advancedTimeDiv.classList.add("animate");
   sortSettingsDiv.classList.add("animate");
   minPlaysDiv.classList.add("animate");
