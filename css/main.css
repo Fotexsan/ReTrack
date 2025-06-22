@@ -30,14 +30,14 @@ h2 {
     padding-left: 12px;
 }
 
-/* Text & Listen */
+/*Text & Listen*/
 p, ol {
     font-size: 18px;
     color: #e3e3e3;
     margin-top: 16px;
 }
 
-/* Links */
+/*Links*/
 a {
     color: #1DB954;
     text-decoration: none;
@@ -49,12 +49,14 @@ a:hover {
     color: #1ed760;
 }
 
+/*Error*/
 .error {
     margin-top: 15px;
     color: #ff4d4d;
     font-size: 15px;
 }
 
+/*hidden*/
 .hidden{
     display: none;
 }
@@ -108,7 +110,7 @@ a:hover {
     color: #0f0f0f;
 }
 
-/* Dropdown Menü */
+/*Logout Menü*/
 .dropdown {
     position: relative;
     display: inline-block;

@@ -8,6 +8,7 @@
         //wenn Nutzer nicht eingeloggt wird dieser zur login Seite weitergeleitet
         $_SESSION['info'] = "Upload";
         header("Location: login.php");
+        die();
     }
 
     //so können echos angezeigt werden bevor der gesamte php code fertig ist
@@ -39,14 +40,14 @@
     <!--Navigationsbar -->
     <nav class="navbar">
         <div class="nav-left">
-            <a href="homepage.php" class="nav-link">Home</a>
+            <a href="homepage.php" class="nav-link">Get Started</a>
             <a href="stats.php" class="nav-link">Stats</a>
             <a href="fileUpload.php" class="nav-link active">File Upload</a>
-            <a href="help.php" class="nav-link">Help</a>
         </div>
         <div class="nav-right">
             <?php
                 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
+                    //Wenn User eingeloggt zeige Accountname mit Dropdown menü
                     echo
                     "<div class='dropdown'>
                         <button class='dropbtn'>$username</button>
@@ -65,7 +66,7 @@
     <!--File Upload -->
     <div class="form-box">
         <h1>Upload your Spotify Data</h1>
-        <p class="not-centered">Select the .json files from your downloaded Spotify data.<br> If you are not sure what to upload click <a href="help.php">here</a> for help.</p>
+        <p>Select the .json files from your downloaded Spotify data.<br> If you are not sure what to upload click <a href="homepage.php">here</a> for help.</p>
         
         <!-- Daten werden an sich selbst geschickt-->
         <form action="" method="POST" enctype="multipart/form-data">
@@ -86,7 +87,7 @@
                     echo "1 file has to be read... <br><br>";
                 }
                 else{
-                    echo " $dataCount files have to be read...<br><br>";
+                    echo " $dataCount files have to be read...<br>This could take a few minutes<br><br>";
                 }
                 
                 //Datenbank Verbindung herstellen

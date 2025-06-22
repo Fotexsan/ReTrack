@@ -1,3 +1,5 @@
+//Diese js Funktion ist nicht von uns selbst geschrieben, da wir dafür js nicht gut genug können
+//Wir fanden diese Art der implementierung aber essentiell, um den Album/Künstler Filter angenehm nutzbar zu machen
 function setupCustomAutocomplete(inputId, suggestionBoxId, fetchUrl, isAlbumMode = false) {
     const input = document.getElementById(inputId);
     const suggestionBox = document.getElementById(suggestionBoxId);
@@ -61,9 +63,11 @@ function setupCustomAutocomplete(inputId, suggestionBoxId, fetchUrl, isAlbumMode
         }
     });
 
+    //Keyboard Control für search Suggestions
     input.addEventListener("keydown", (e) => {
         const items = suggestionBox.querySelectorAll(".suggestion-item");
 
+        //Macht die seach Suggestions mit Arrowkeys scrollbar
         if (e.key === "ArrowDown") {
             if (items.length === 0) return;
             e.preventDefault();
@@ -78,6 +82,7 @@ function setupCustomAutocomplete(inputId, suggestionBoxId, fetchUrl, isAlbumMode
             updateHighlight(items);
         }
 
+        //Enter wählt oberstes Ergebnis austomatisch aus
         else if (e.key === "Enter") {
             if (items.length > 0 && selectedIndex >= 0) {
                 e.preventDefault();
@@ -101,13 +106,8 @@ function setupCustomAutocomplete(inputId, suggestionBoxId, fetchUrl, isAlbumMode
         }
     });
 
-    document.addEventListener("click", (e) => {
-        if (!input.contains(e.target) && !suggestionBox.contains(e.target)) {
-            suggestionBox.style.display = "none";
-            selectedIndex = -1;
-        }
-    });
-
+    //Markiert von Arrowkeys ausgewähltes Ergebnis
+    //scrollt mit ausgewähltem Ergebnis mit
     function updateHighlight(items) {
         items.forEach((item, index) => {
             if (index === selectedIndex) {
@@ -118,9 +118,17 @@ function setupCustomAutocomplete(inputId, suggestionBoxId, fetchUrl, isAlbumMode
             }
         });
     }
+
+    //Ermöglicht auswählen durch Klicken auf den Vorschlag
+    document.addEventListener("click", (e) => {
+        if (!input.contains(e.target) && !suggestionBox.contains(e.target)) {
+            suggestionBox.style.display = "none";
+            selectedIndex = -1;
+        }
+    });
 }
 
-
+//aufrufen von getArtistSuggestions.php und getAlbumSuggestions.php für anzuzeigenden Inhalt
 window.addEventListener("DOMContentLoaded", () => {
     setupCustomAutocomplete("artist", "artistSuggestions", "./logic/stats/searchSuggestions/getArtistSuggestions.php");
     setupCustomAutocomplete("album", "albumSuggestions", "./logic/stats/searchSuggestions/getAlbumSuggestions.php", true);

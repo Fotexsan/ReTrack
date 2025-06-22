@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         for ($i = 0; $i<$entryCount; $i++){
             $counter = $i + 1;
             echo "<tr>";
-            echo "<td>$counter.</td>";
+            echo "<td id='counter'>$counter.</td>";
             for ($j = 0; $j < count($result[$i]); $j++){
                 $entry = $result[$i][$j];
 

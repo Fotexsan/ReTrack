@@ -12,6 +12,11 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["rePassw
     if ($userPassword == $userRePassword){
         //Verbindung zum DB-Server herstellen
         $conn = connect();
+
+        //Strings richtig escapen, damit Zeichen wie ' nicht stören
+        $username = $conn->real_escape_string($username);
+        $userEmail = $conn->real_escape_string($userEmail);
+        $userPassword = $conn->real_escape_string($userPassword);      
         
         //Checken ob Email schon in Gebrauch ist
         $sql = "SELECT COUNT(*) > 0

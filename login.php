@@ -18,10 +18,9 @@
     <!--Navigationsbar -->
     <nav class="navbar">
         <div class="nav-left">
-            <a href="homepage.php" class="nav-link">Home</a>
+            <a href="homepage.php" class="nav-link">Get Started</a>
             <a href="stats.php" class="nav-link">Stats</a>
             <a href="fileUpload.php" class="nav-link">File Upload</a>
-            <a href="help.php" class="nav-link">Help</a>
         </div>
         <div class="nav-right">
             <a href="login.php" class="nav-link active">Log in</a>

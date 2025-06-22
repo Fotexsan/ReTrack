@@ -19,14 +19,14 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
      <!--Navigationsbar -->
     <nav class="navbar">
         <div class="nav-left">
-            <a href="homepage.php" class="nav-link active">Home</a>
+            <a href="homepage.php" class="nav-link active">Get Started</a>
             <a href="stats.php" class="nav-link">Stats</a>
             <a href="fileUpload.php" class="nav-link">File Upload</a>
-            <a href="help.php" class="nav-link">Help</a>
         </div>
         <div class="nav-right">
             <?php
                 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
+                    //Wenn User eingeloggt zeige Accountname mit Dropdown menü
                     echo
                     "<div class='dropdown'>
                         <button class='dropbtn'>$username</button>
@@ -36,6 +36,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                     </div>";
                 }
                 else{
+                    //Sonst zeige Login button
                     echo "<a href='login.php' class='nav-link'>Log in</a>";
                 }
             ?>

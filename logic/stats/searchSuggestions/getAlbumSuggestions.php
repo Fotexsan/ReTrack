@@ -11,23 +11,37 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     die();
 }
 
+//JSON header setzten
 header('Content-Type: application/json');
 
+//wenn keine Daten übergeben wurden wird, wird ein leeres JSON array zurückgegeben
 if (!isset($_GET['term'])) {
     echo json_encode([]);
     die();
 }
 
+//Verbindung zu Datenbank herstellen
+$conn = connect();
+
+//Benutzereingabe speichern
 $term = $_GET['term'];
 
-$conn = connect();
-$stmt = $conn->prepare("SELECT DISTINCT master_metadata_album_album_name, master_metadata_album_artist_name FROM songData WHERE accountId = '$id' AND master_metadata_album_album_name LIKE CONCAT('%', ?, '%') LIMIT 10");
-$stmt->bind_param("s", $term);
-$stmt->execute();
+//String richtig escapen, so stören Zeichen wie ' nicht
+$term = $conn->real_escape_string($term);
 
-$result = $stmt->get_result();
+//sql Befehl erstellen, der maximal 10 Zeilen holt, die einen ähnlichen Albumnamen haben
+$sql = "SELECT DISTINCT master_metadata_album_album_name, master_metadata_album_artist_name 
+        FROM songData 
+        WHERE accountId = '$id' AND master_metadata_album_album_name LIKE '%$term%' 
+        LIMIT 10";
+
+//sql Befehl ausführen
+$result = $conn->query($sql);
+
+//suggestions Array initialisieren
 $suggestions = [];
 
+//Alle Zeilen, die gefunden wurden im suggestions Array speichern (Albumname und Künstlername)
 while ($row = $result->fetch_assoc()) {
     $album = $row['master_metadata_album_album_name'];
     $artist = $row['master_metadata_album_artist_name'];
@@ -37,6 +51,9 @@ while ($row = $result->fetch_assoc()) {
     ];
 }
 
+//JSON ANtwort mit suggestions Objekt zurückgeben
 echo json_encode($suggestions);
+
+//Datenbankverbindungschließen
 $conn->close();
 ?>

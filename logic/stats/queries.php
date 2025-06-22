@@ -1,6 +1,10 @@
 <?php
 //Funktion, die die eingestellten Filter zu einem sql query macht und einen array mit den gefilterten Daten zurückgibt
 function query(){
+
+    //Datenbankverbindung aufbauen
+    $conn = connect();
+
     //where SQL array
     $where = [];
 
@@ -57,12 +61,18 @@ function query(){
     if (isset($_POST["album"]) && $_POST["album"] != ""){
         $album = $_POST["album"];
 
+        //String richtig escapen, so stören Zeichen wie ' nicht
+        $album = $conn->real_escape_string($album);
+
         //bekommt eigenen sql string, für unterscheidung zwischen simple und komplex
         $whereAlbum = "AND master_metadata_album_album_name = '$album'";
         $whereMetricAlbum = "AND s.master_metadata_album_album_name = '$album'";
     }
     if (isset($_POST["artist"]) && $_POST["artist"] != ""){
         $artist = $_POST["artist"];
+
+        //String richtig escapen, so stören Zeichen wie ' nicht
+        $artist = $conn->real_escape_string($artist);
 
         //bekommt eigenen sql string, für unterscheidung zwischen simple und komplex
         $whereArtist = "AND master_metadata_album_artist_name = '$artist'";
@@ -223,9 +233,6 @@ function query(){
 
     //where array zu string konvertieren
     $whereString = implode(" AND ", $where);
-
-    //Datenbank verbindung aufbauen
-    $conn = connect();
 
     if ($_POST["metric"] == "mPlayed" || $_POST["metric"]== "mTime")
     //der zusammengesetze sql Befehl hat noch Spaß gemacht

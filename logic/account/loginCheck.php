@@ -3,12 +3,16 @@ session_start();
 include "../dbConnection.php";
 
 if (isset($_POST["email"]) && isset($_POST["password"])){
+    //Verbindung zum DB-Server herstellen
+    $conn = connect();
+
     //User Eingabe speichern
     $userEmail = $_POST["email"];
     $userPassword = $_POST["password"];
 
-    //Verbindung zum DB-Server herstellen
-    $conn = connect();
+    //Strings richtig escapen, damit Zeichen wie ' nicht stören
+    $userEmail = $conn->real_escape_string($userEmail);
+    $userPassword = $conn->real_escape_string($userPassword);
 
     //Checken ob User mit den Daten existiert
     $sql = "SELECT id, username 

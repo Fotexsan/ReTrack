@@ -1,3 +1,4 @@
+/*Filter struktur*/
 .filter-container {
     background-color: #1e1e1e;
     max-width: 1200px;
@@ -14,16 +15,6 @@
     margin-bottom: 20px;
 }
 
-.filter-header h1 {
-    margin: 0;
-}
-
-.filter-container h3{
-    font-size: 16px;
-    margin-bottom: 3px;
-    font-weight: normal;
-}
-
 .filter-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -37,6 +28,18 @@
     border-radius: 10px;
 }
 
+/*Headlines*/
+.filter-header h1 {
+    margin: 0;
+}
+
+.filter-container h3{
+    font-size: 16px;
+    margin-bottom: 3px;
+    font-weight: normal;
+}
+
+/*Form Elemente*/
 select, input  {
     width: 100%;
     height: 40px;
@@ -75,6 +78,7 @@ input:focus[type="checkbox"], input:focus[type="radio"]{
     margin-right: 40px
 }
 
+/*Suchvorschläge*/
 .search-container {
     position: relative;
 }
@@ -96,6 +100,7 @@ input:focus[type="checkbox"], input:focus[type="radio"]{
     display: none;
 }
 
+/*Vorschläge*/
 .suggestion-item {
     padding: 8px 12px;
 }
@@ -108,18 +113,12 @@ input:focus[type="checkbox"], input:focus[type="radio"]{
     background-color: #4a4a4a;
 }
 
-
-.apply-button{
-    display: flex;
-    justify-content: center;
-    padding: 0;
-}
-
+/*Submit button*/
 .filter-btn{
     margin: 10px auto 10px 480px;
 }
 
-/* Checkbox Dropdown */
+/*Checkbox Dropdown*/
 .dropdown-checklist {
     position: relative;
     width: 100%;
@@ -142,7 +141,7 @@ input:focus[type="checkbox"], input:focus[type="radio"]{
     padding-right: 30px;
 }
 
-/* Pfeil-Symbol */
+/*Pfeil symbol*/
 .dropdown-checklist .dropdown-button::after {
     content: "▼";
     position: absolute;
@@ -155,7 +154,7 @@ input:focus[type="checkbox"], input:focus[type="radio"]{
     content: "▲";
 }
 
-
+/*Dropdwon Container*/
 .dropdown-checklist .dropdown-options {
     display: none;
     position: absolute;
@@ -174,7 +173,7 @@ input:focus[type="checkbox"], input:focus[type="radio"]{
     z-index: 10;
 }
 
-/* Checkbox-Labels */
+/*Checkbox label*/
 .dropdown-checklist .dropdown-options label {
     display: flex;
     align-items: center;
@@ -188,7 +187,7 @@ input:focus[type="checkbox"], input:focus[type="radio"]{
     background-color: #4a4a4a;
 }
 
-/* Checkboxen */
+/*Checkboxen*/
 .dropdown-checklist .dropdown-options input[type="checkbox"] {
     margin-right: 8px;
     width: 14px;
@@ -196,6 +195,7 @@ input:focus[type="checkbox"], input:focus[type="radio"]{
     accent-color: #1DB954;
 }
 
+/*Dropdoiwn disabled*/
 .dropdown-checklist.disabled .dropdown-button {
     cursor: not-allowed;
     opacity: 0.3; 
@@ -242,10 +242,7 @@ input:focus[type="checkbox"], input:focus[type="radio"]{
     text-align: center;
 }
 
-h2 {
-    margin-top:23px;
-}
-
+/*Results Header*/
 .results-header {
     display: flex;
     justify-content: space-between;
@@ -253,6 +250,11 @@ h2 {
     margin-bottom: 20px;
 }
 
+h2 {
+    margin-top:23px;
+}
+
+/*Tabelle*/
 table {
     width: 100%;
     border-collapse: collapse;
@@ -272,6 +274,11 @@ th {
 td {
     padding: 12px;
     border-bottom: 1px solid #2a2a2a;
+    min-width: 80px;
+}
+
+#counter{
+    min-width: 10px;
 }
 
 tr:hover {
