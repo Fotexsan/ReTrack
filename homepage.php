@@ -63,6 +63,10 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
         </ol>
 
         <p>Get right into it: <a href="createAccount.php">Create account</a></p>
+        <h2>What files do I upload?</h2>
+        <p>After getting your extended streaming history from Spotify, look for a folder named "Spotify_Extended_Streaming_History".
+            That folder should contain all the relevant .json files.
+        </p>
     </div>
 </body> 
 </html>
