@@ -216,13 +216,11 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                     </div>
                 </div>
                 <input type="hidden" id="accountId" name="accountId" value=<?php echo "$accountId"?>>
-                <input type="submit" class="form-submit filter-btn"></input>
+                <input type="submit" class="form-submit filter-btn" value="Submit Query"></input>
             </form>
         </div>
     </div>
-    
-    
-                    
+        
     <div class="results-container" id="results">
         No filters applied yet
     </div>
