@@ -47,7 +47,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     <div class="content">
 
         <h1>Welcome to ReTrack</h1>
-        <p>See what Spotify Wrapped doesn't tell you.</p>
+        <p class="slogan">See what Spotify Wrapped doesn't tell you.</p>
         <p>Have you ever wondered which song you have listend to for the longest total time? Or which song you have skipped the most? 
             Are you impatient and can't wait until December for Spotify Wrapped? For all that and more, ReTrack has got you covered!
         </p>
@@ -64,7 +64,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 
         <p>Get right into it: <a href="createAccount.php">Create account</a></p>
         <h2>What files do I upload?</h2>
-        <p>After getting your extended streaming history from Spotify, look for a folder named "Spotify_Extended_Streaming_History".
+        <p>After getting your data from Spotify, look for a folder named "Spotify_Extended_Streaming_History".
             That folder should contain all the relevant .json files.
         </p>
     </div>
