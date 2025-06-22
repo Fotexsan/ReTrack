@@ -3,6 +3,6 @@
 session_start();
 session_unset();
 session_destroy();
-header("Location:../../homepage.php"); //Success Nachricht hinzufügen
+header("Location:../../homepage.php");
 die();
 ?>
